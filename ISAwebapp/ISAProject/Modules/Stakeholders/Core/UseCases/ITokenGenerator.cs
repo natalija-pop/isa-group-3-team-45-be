@@ -6,6 +6,6 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
 {
     public interface ITokenGenerator
     {
-        Result<AuthenticationTokensDto> GenerateAccessToken(User user, long personId);
+        Result<AuthenticationTokensDto> GenerateAccessToken(User user);
     }
 }

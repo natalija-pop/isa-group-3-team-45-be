@@ -6,7 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using ISAProject.Configuration.Infrastructure.Database;
 using ISAProject.Modules.Stakeholders.API.Public;
 using Microsoft.EntityFrameworkCore;
-
+using ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories;
+using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
 
 namespace ISAProject.Modules.Stakeholders.Infrastructure
 {
@@ -24,6 +25,9 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITokenGenerator, JwtGenerator>();
+
+            services.AddScoped<IUserRepository, UserDatabaseRepository>();
+
         }
 
         private static void SetupInfrastructure(IServiceCollection services)

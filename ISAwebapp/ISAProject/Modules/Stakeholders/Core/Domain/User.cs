@@ -15,8 +15,9 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
         public string Profession { get; private set; }
         public string CompanyInformation { get; private set; }
         public UserRole Role { get; private set; }
+        public bool IsActivated { get; private set; } = false;
 
-        public User(string email, string password, string name, string surname, string city, string country, string phone, string profession, string companyInformation, UserRole role)
+        public User(string email, string password, string name, string surname, string city, string country, string phone, string profession, string companyInformation, UserRole role, bool isActivated)
         {
             Email = email;
             Password = password;
@@ -28,6 +29,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
             Profession = profession;
             CompanyInformation = companyInformation;
             Role = role;
+            IsActivated = isActivated;
             Validate();
         }
         private void Validate()
@@ -51,6 +53,8 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
 
     public enum UserRole
     {
-        Administrator
+        Employee,
+        CompanyAdministrator,
+        SystemAdministrator
     }
 }
