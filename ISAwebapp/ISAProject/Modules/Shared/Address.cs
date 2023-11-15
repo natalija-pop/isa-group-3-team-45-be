@@ -1,8 +1,8 @@
 ﻿using ISAProject.Configuration.Core.Domain;
 
-namespace ISAProject.Modules.Company.Core.Domain
+namespace ISAProject.Modules.Shared
 {
-    public class Address: ValueObject
+    public class Address : ValueObject
     {
         public string Street { get; set; }
         public int Number { get; set; }
@@ -23,7 +23,7 @@ namespace ISAProject.Modules.Company.Core.Domain
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Street;
-            yield return Number; 
+            yield return Number;
             yield return City;
             yield return Country;
         }

@@ -1,4 +1,4 @@
-﻿using ISAProject.Modules.Company.Core.Domain;
+﻿using ISAProject.Modules.Shared;
 
 namespace ISAProject.Modules.Company.API.Dtos
 {

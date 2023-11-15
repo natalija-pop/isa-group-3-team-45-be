@@ -1,4 +1,5 @@
 ﻿using ISAProject.Configuration.Core.Domain;
+using ISAProject.Modules.Shared;
 
 namespace ISAProject.Modules.Company.Core.Domain
 {
