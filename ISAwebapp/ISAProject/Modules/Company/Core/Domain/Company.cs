@@ -1,0 +1,24 @@
+﻿using ISAProject.Configuration.Core.Domain;
+
+namespace ISAProject.Modules.Company.Core.Domain
+{
+    public class Company: Entity
+    {
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public Address Address { get; private set; }
+
+        public Company(string name, string description, Address address)
+        {
+            Name = name;
+            Description = description;
+            Address = address;
+        }
+
+        private static void Validate(string name, string description)
+        {
+            if (name == null || name.Equals("")) throw new ArgumentException("Exception! Empty name!");
+            if (description == null || description.Equals("")) throw new ArgumentException("Exception! Empty description!");
+        }
+    }
+}
