@@ -1,4 +1,5 @@
-﻿using ISAProject.Modules.Stakeholders.Infrastructure;
+﻿using ISAProject.Modules.Company.Infrastructure;
+using ISAProject.Modules.Stakeholders.Infrastructure;
 
 namespace API.Startup
 {
@@ -7,6 +8,7 @@ namespace API.Startup
         public static IServiceCollection RegisterModules(this IServiceCollection services)
         {
             services.ConfigureStakeholdersModule();
+            services.ConfigureCompanyModule();
             return services;
         }
     }
