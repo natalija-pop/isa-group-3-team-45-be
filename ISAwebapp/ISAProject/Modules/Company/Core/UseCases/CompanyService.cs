@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentResults;
 using ISAProject.Configuration.Core.UseCases;
 using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;

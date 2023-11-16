@@ -1,7 +1,6 @@
 ﻿using ISAProject.Configuration.Core.Domain;
 using ISAProject.Configuration.Core.UseCases;
-using System.Data.Entity;
-
+using Microsoft.EntityFrameworkCore;
 // Preuzeto kao šablon sa projekta iz predmeta PSW
 
 

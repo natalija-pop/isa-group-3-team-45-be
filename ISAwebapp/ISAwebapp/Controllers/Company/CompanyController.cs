@@ -21,5 +21,30 @@ namespace API.Controllers.Company
             return CreateResponse(result);
         }
 
+        [HttpGet("getAll")]
+        public ActionResult<CompanyDto> GetPaged([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            return CreateResponse(_companyService.GetPaged(page, pageSize));
+        }
+
+        [HttpGet("get/{companyId:int}")]
+        public ActionResult<CompanyDto> Get([FromRoute] int companyId)
+        {
+            return CreateResponse(_companyService.Get(companyId));
+        }
+
+        [HttpPut("{companyId:int}")]
+        public ActionResult<CompanyDto> Update([FromBody] CompanyDto companyDto)
+        {
+            return CreateResponse(_companyService.Update(companyDto));
+        }
+
+        [HttpDelete("delete/{companyId:int}")]
+        public ActionResult<CompanyDto> Delete([FromRoute] int companyId)
+        {
+            return CreateResponse(_companyService.Delete(companyId));
+        }
+
+
     }
 }
