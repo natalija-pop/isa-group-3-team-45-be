@@ -8,17 +8,26 @@ namespace ISAProject.Modules.Company.Core.Mappers
     {
         public CompanyProfile()
         {
+            CreateMap<AddressDto, Address>();
+            CreateMap<Address, AddressDto>();
+
             CreateMap<CompanyDto, Domain.Company>()
                 .ForMember(dest => dest.Address, opt =>
+                {
+                    opt.PreCondition(x => x.Address != null);
                     opt.MapFrom(src =>
                         new Address(
                             src.Address.Street,
                             src.Address.Number,
                             src.Address.City,
-                            src.Address.Country)));
-
+                            src.Address.Country
+                        ));
+                }
+                    );
             CreateMap<Domain.Company, CompanyDto>()
                 .ForMember(dest => dest.Address, opt =>
+                {
+                    opt.PreCondition(x => x.Address != null);
                     opt.MapFrom(src =>
                         new AddressDto
                         {
@@ -26,7 +35,8 @@ namespace ISAProject.Modules.Company.Core.Mappers
                             Number = src.Address.Number,
                             City = src.Address.City,
                             Country = src.Address.Country
-                        }));
+                        });
+                });
         }
     }
 }

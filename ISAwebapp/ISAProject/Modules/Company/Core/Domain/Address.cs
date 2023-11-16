@@ -1,6 +1,6 @@
 ﻿using ISAProject.Configuration.Core.Domain;
 
-namespace ISAProject.Modules.Shared
+namespace ISAProject.Modules.Company.Core.Domain
 {
     public class Address : ValueObject
     {
@@ -9,6 +9,9 @@ namespace ISAProject.Modules.Shared
         public string City { get; set; }
         public string Country { get; set; }
 
+        public Address()
+        {
+        }
 
         [Newtonsoft.Json.JsonConstructor]
         public Address(string street, int number, string city, string country)

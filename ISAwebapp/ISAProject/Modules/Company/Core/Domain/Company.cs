@@ -1,5 +1,4 @@
 ﻿using ISAProject.Configuration.Core.Domain;
-using ISAProject.Modules.Shared;
 
 namespace ISAProject.Modules.Company.Core.Domain
 {
@@ -7,10 +6,15 @@ namespace ISAProject.Modules.Company.Core.Domain
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public Address Address { get; private set; }
+        public Address Address { get; set; }
 
+        public Company()
+        {
+            
+        }
         public Company(string name, string description, Address address)
         {
+            Validate(name, description);
             Name = name;
             Description = description;
             Address = address;
