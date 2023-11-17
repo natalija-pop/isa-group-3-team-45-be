@@ -26,13 +26,13 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             return _tokenGenerator.GenerateAccessToken(user);
         }
 
-        public Result<AuthenticationTokensDto> RegisterUser(UserDto account)
+        public Result<AuthenticationTokensDto> RegisterUser(UserRegistrationDto account)
         {
             if (_userRepository.Exists(account.Email)) return Result.Fail(FailureCode.NonUniqueUsername);
 
             try
             {
-                var user = _userRepository.Create(new User(account.Email, account.Password, account.Name, account.Surname, account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation, (UserRole)account.Role, account.IsActivated));
+                var user = _userRepository.Create(new User(account.Email, account.Password, account.Name, account.Surname, account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation, (UserRole)account.Role, false));
                 return _tokenGenerator.GenerateAccessToken(user);
             }
             catch (ArgumentException e)
