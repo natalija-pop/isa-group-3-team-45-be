@@ -12,6 +12,8 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database
         {
             modelBuilder.HasDefaultSchema("stakeholders");
 
+            modelBuilder.Entity<Core.Domain.User>().ToTable("Users");
+
             ConfigureStakeholder(modelBuilder);
         }
 
