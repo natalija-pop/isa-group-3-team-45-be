@@ -18,6 +18,5 @@ namespace ISAProject.Modules.Stakeholders.API.Dtos
         public string Phone { get; set; }
         public string Profession { get; set; }
         public string CompanyInformation { get; set; }
-        public UserRole Role { get; set; }
     }
 }
