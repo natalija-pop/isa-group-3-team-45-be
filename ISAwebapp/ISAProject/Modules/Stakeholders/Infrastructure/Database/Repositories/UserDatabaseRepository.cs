@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ISAProject.Modules.Stakeholders.Core.Domain;
+﻿using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
-using ISAProject.Modules.Stakeholders.Infrastructure.Database;
 
 namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
 {

@@ -1,4 +1,6 @@
-﻿using ISAProject.Configuration.Core.Domain;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using ISAProject.Configuration.Core.Domain;
+using ISAProject.Modules.Stakeholders.Core.Domain;
 
 namespace ISAProject.Modules.Company.Core.Domain
 {
@@ -9,6 +11,9 @@ namespace ISAProject.Modules.Company.Core.Domain
         public Address Address { get; set; }
         public int Rating { get; set; }
         public virtual ICollection<Equipment> Equipment { get; private set; }
+        
+        [NotMapped]
+        public virtual ICollection<CompanyAdmin> Admins { get; private set; }
 
         public Company() {}
         public Company(string name, string description, Address address)
