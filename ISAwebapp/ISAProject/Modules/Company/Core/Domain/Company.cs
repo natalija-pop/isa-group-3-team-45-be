@@ -7,6 +7,7 @@ namespace ISAProject.Modules.Company.Core.Domain
         public string Name { get; private set; }
         public string Description { get; private set; }
         public Address Address { get; set; }
+        public virtual ICollection<Equipment> Equipment { get; private set; }
 
         public Company() {}
         public Company(string name, string description, Address address)
