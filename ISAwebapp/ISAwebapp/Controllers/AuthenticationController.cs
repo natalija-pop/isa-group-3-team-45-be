@@ -15,7 +15,7 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult<AuthenticationTokensDto> RegisterTourist([FromBody] UserDto account)
+        public ActionResult<AuthenticationTokensDto> RegisterTourist([FromBody] UserRegistrationDto account)
         {
             var result = _authenticationService.RegisterUser(account);
             return CreateResponse(result);
