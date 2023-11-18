@@ -13,8 +13,13 @@ namespace ISAProject.Modules.Company.Core.UseCases
         {
         }
 
-        public Result<List<EquipmentDto>> Search()
+        public Result<List<EquipmentDto>> Search(string searchKeyword)
         {
+            Predicate<Equipment> searchPredicate = x => x.Name.ToLower()
+                .Contains(searchKeyword.ToLower());
+
+            var equipment = CrudRepository.GetSearchResults(searchPredicate);
+            return MapToDto(equipment);
         }
     }
 }

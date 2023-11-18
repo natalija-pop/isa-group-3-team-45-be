@@ -62,5 +62,11 @@ namespace ISAProject.Configuration.Infrastructure.Database
             _dbSet.Remove(entity);
             DbContext.SaveChanges();
         }
+
+        public List<TEntity> GetSearchResults(Predicate<TEntity> predicate)
+        {
+            return _dbSet.ToList()
+                .FindAll(predicate);
+        }
     }
 }
