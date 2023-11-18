@@ -32,7 +32,7 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
 
             try
             {
-                var user = _userRepository.Create(new User(account.Email, account.Password, account.Name, account.Surname, account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation, (UserRole)account.Role, account.IsActivated));
+                var user = _userRepository.Create(new User(account.Email, account.Username, account.Password, account.Name, account.Surname, account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation, (UserRole)account.Role, account.IsActivated));
                 return _tokenGenerator.GenerateAccessToken(user);
             }
             catch (ArgumentException e)
