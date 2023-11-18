@@ -29,8 +29,7 @@ namespace ISAProject.Modules.Company.Infrastructure
             services.AddScoped(typeof(ICrudRepository<Core.Domain.Company>), typeof(CrudRepository<Core.Domain.Company, CompanyContext>));
 
             services.AddDbContext<CompanyContext>(opt =>
-                opt.UseNpgsql(DatabaseConnectionBuilder.Build("company"),
-                    x => x.MigrationsHistoryTable("__EFMigrationsHistory", "company")));
+                opt.UseNpgsql(DatabaseConnectionBuilder.Build("company")));
         }
     }
 }

@@ -8,10 +8,7 @@ namespace ISAProject.Modules.Company.Core.Domain
         public string Description { get; private set; }
         public Address Address { get; set; }
 
-        public Company()
-        {
-            
-        }
+        public Company() {}
         public Company(string name, string description, Address address)
         {
             Validate(name, description);
