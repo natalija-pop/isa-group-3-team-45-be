@@ -8,7 +8,7 @@ namespace ISAProject.Modules.Stakeholders.API.Public
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string toEmail, string subject, string body);
+        public void SendActivationEmail(string recipientEmail, string activationLink);
 
     }
 }
