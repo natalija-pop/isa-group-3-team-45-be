@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
+using FluentResults;
 using ISAProject.Configuration.Core.UseCases;
 using ISAProject.Modules.Stakeholders.API.Dtos;
 using ISAProject.Modules.Stakeholders.API.Public;
 using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ISAProject.Modules.Stakeholders.Core.UseCases
 {
@@ -34,6 +30,13 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
         public User? GetActiveUserByEmail(string email)
         {
             return _userRepository.GetActiveUserByEmail(email);
+        }
+
+        public Result<UserDto> AddNewCompanyAdmin(UserDto userDto, long companyId)
+        {
+            var user = Create(MapToDomain(userDto));
+            _userRepository.Create(new CompanyAdmin(companyId, user.Id));
+            return MapToDto(user);
         }
     }
 }

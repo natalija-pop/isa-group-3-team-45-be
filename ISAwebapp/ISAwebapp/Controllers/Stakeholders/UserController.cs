@@ -1,9 +1,5 @@
-﻿using ISAProject.Modules.Company.API.Dtos;
-using ISAProject.Modules.Company.API.Public;
-using ISAProject.Modules.Company.Core.UseCases;
-using ISAProject.Modules.Stakeholders.API.Dtos;
+﻿using ISAProject.Modules.Stakeholders.API.Dtos;
 using ISAProject.Modules.Stakeholders.API.Public;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -24,6 +20,12 @@ namespace API.Controllers.Stakeholders
         {
             var result = _userService.Create(userDto);
             return CreateResponse(result);
+        }
+
+        [HttpPost("{companyId:int}")]
+        public ActionResult<UserDto> CreateNewCompanyAdmin([FromBody] UserDto userDto, [FromRoute] int companyId)
+        {
+            return CreateResponse(_userService.AddNewCompanyAdmin(userDto, companyId));
         }
 
         [HttpGet("getAll")]
