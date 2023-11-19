@@ -12,8 +12,11 @@ namespace ISAProject.Modules.Company.Core.UseCases
 {
     public class EquipmentService: CrudService<EquipmentDto, Equipment>, IEquipmentService
     {
+        private ICrudRepository<Equipment> repository;
+
         public EquipmentService(ICrudRepository<Equipment> crudRepository, IMapper mapper) : base(crudRepository, mapper)
         {
+            repository = crudRepository;
         }
 
         public Result<List<EquipmentDto>> Search(string searchKeyword)
@@ -32,5 +35,18 @@ namespace ISAProject.Modules.Company.Core.UseCases
 
             return MapToDto(filteredResult);
         }
+
+        /*
+        public Result<EquipmentDto> CreateEquipment(EquipmentDto equipmentDto)
+        {
+            var equipment = MapToDomain(equipmentDto);
+            equipment.CompanyId = equipmentDto.Company.Id;
+            equipment.Company = null;
+
+            repository.Create(equipment);
+            return MapToDto(equipment);
+        }
+        */
+
     }
 }
