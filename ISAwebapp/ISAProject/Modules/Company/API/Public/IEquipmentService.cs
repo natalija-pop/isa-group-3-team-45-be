@@ -9,6 +9,7 @@ namespace ISAProject.Modules.Company.API.Public
         Result<EquipmentDto> Get(int id);
         Result<PagedResult<EquipmentDto>> GetPaged(int page, int pageSize);
         Result<List<EquipmentDto>> Search(string searchKeyword);
+        Result<List<EquipmentDto>> GetByCompanyId(int page, int pageSize, long companyId);
     }
 }
 
