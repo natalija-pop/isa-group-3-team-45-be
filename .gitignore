@@ -396,3 +396,11 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Migrations
+ISAwebapp/**/Migrations/*
+
+ISAwebapp/ISAProject/Configuration/Infrastructure/Database/DatabaseConnectionBuilder.cs
+
+ISAwebapp/**/Migrations/*
+

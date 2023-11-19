@@ -15,7 +15,7 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Security
         private readonly string _issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "explorer";
         private readonly string _audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "explorer-front.com";
 
-        public Result<AuthenticationTokensDto> GenerateAccessToken(User user, long personId)
+        public Result<AuthenticationTokensDto> GenerateAccessToken(User user)
         {
             var authenticationResponse = new AuthenticationTokensDto();
 
@@ -23,8 +23,7 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Security
             {
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new("id", user.Id.ToString()),
-                new("username", user.Username),
-                new("personId", personId.ToString()),
+                new("email", user.Email),
                 new(ClaimTypes.Role, user.GetPrimaryRoleName())
             };
 

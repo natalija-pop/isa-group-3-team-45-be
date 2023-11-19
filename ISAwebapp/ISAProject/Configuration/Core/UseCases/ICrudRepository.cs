@@ -11,5 +11,6 @@ namespace ISAProject.Configuration.Core.UseCases
         TEntity Create(TEntity entity);
         TEntity Update(TEntity entity);
         void Delete(long id);
+        public List<TEntity> GetSearchResults(Predicate<TEntity> predicate);
     }
 }
