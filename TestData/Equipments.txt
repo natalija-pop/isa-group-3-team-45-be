@@ -1,0 +1,5 @@
+INSERT INTO company."Equipments"("Id", "Name", "Description", "Type", "CompanyId") VALUES (1, 'Maska', 'Higijenska maska', 3, 1);
+INSERT INTO company."Equipments"("Id", "Name", "Description", "Type", "CompanyId") VALUES (2, 'Makaze', 'Hirurske makaze', 1, 1);
+INSERT INTO company."Equipments"("Id", "Name", "Description", "Type", "CompanyId") VALUES (3, 'Gaza', 'Sterilna gaza', 2, 1);
+INSERT INTO company."Equipments"("Id", "Name", "Description", "Type", "CompanyId") VALUES (4, 'Igla', 'Igla za zasivanje', 1, 1);
+INSERT INTO company."Equipments"("Id", "Name", "Description", "Type", "CompanyId") VALUES (5, 'Stetoskop', 'Stetoskop rozi', 0, 1);

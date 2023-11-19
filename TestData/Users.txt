@@ -1,0 +1,29 @@
+INSERT INTO stakeholders."Users"("Id", "Email", "Password", "Name", "Surname", "City", "Country", "Phone", "Profession", "CompanyInformation", "Role", "IsActivated")
+VALUES (2, 'anja1107.am@gmail.com', '123456', 'Anja', 'Maksimović', 'Novi Sad', 'Serbia', '02125415', 'Admin', 'Kompanija 2', 1, True);
+
+INSERT INTO stakeholders."Users"("Id", "Email", "Password", "Name", "Surname", "City", "Country", "Phone", "Profession", "CompanyInformation", "Role", "IsActivated")
+VALUES (3, 'bilja@gmail.com', 'bilja123', 'Biljana', 'Mijic', 'Novi Sad', 'Serbia', '065489758', 'Admin', 'Kompanija medicinske opreme', 1, True);
+
+INSERT INTO stakeholders."Users"("Id", "Email", "Password", "Name", "Surname", "City", "Country", "Phone", "Profession", "CompanyInformation", "Role", "IsActivated")
+VALUES (4, 'ivanica@gmail.com', 'ivana123', 'Ivana', 'Ilijin', 'Zrenjanin', 'Serbia', '0648795684', 'Admin', 'Medlab', 1, True);
+
+INSERT INTO stakeholders."Users"("Id", "Email", "Password", "Name", "Surname", "City", "Country", "Phone", "Profession", "CompanyInformation", "Role", "IsActivated")
+VALUES (5, 'anja@gmail.com', 'anja123', 'Anja', 'Maksimović', 'Novi Sad', 'Srbija', '063535191', 'Admin', 'Medical Company', 1, True);
+
+INSERT INTO stakeholders."Users"("Id", "Email", "Password", "Name", "Surname", "City", "Country", "Phone", "Profession", "CompanyInformation", "Role", "IsActivated")
+VALUES (6, 'natka@gmail.com', 'natalija123', 'Natalija', 'Popovic', 'Novi Sad', 'Srbija', '0695874789', 'Admin', 'Amazon', 1, True);
+
+INSERT INTO stakeholders."Users"("Id", "Email", "Password", "Name", "Surname", "City", "Country", "Phone", "Profession", "CompanyInformation", "Role", "IsActivated")
+VALUES (8, 'nata@gmail.com', 'nata123', 'Natalija', 'Popovic', 'Novi Sad', 'Srbija', '0625698741', 'Admin sistema', 'Sistem', 2, True);
+
+INSERT INTO stakeholders."Users"("Id", "Email", "Password", "Name", "Surname", "City", "Country", "Phone", "Profession", "CompanyInformation", "Role", "IsActivated")
+VALUES (9, 'marko@gmail.com', 'marko123', 'Marko', 'Markovic', 'Bijeljina', 'Bosna i Hercegovina', '0698632147', 'Admin', 'Maks', 1, True);
+
+INSERT INTO stakeholders."Users"("Id", "Email", "Password", "Name", "Surname", "City", "Country", "Phone", "Profession", "CompanyInformation", "Role", "IsActivated")
+VALUES (10, 'aleksa@gmail.com', 'aleksa123', 'Aleksa', 'Aleksic', 'Apatin', 'Srbija', '064296387', 'Admin', 'Maks', 1, True);
+
+INSERT INTO stakeholders."Users"("Id", "Email", "Password", "Name", "Surname", "City", "Country", "Phone", "Profession", "CompanyInformation", "Role", "IsActivated")
+VALUES (1, 'luka@gmail.com', '123456', 'Luka', 'Lukic', 'Novi Sad', 'Novi Sad', '0632589741', 'Admin', 'Kompanija 1', 1, True);
+
+INSERT INTO stakeholders."Users"("Id", "Email", "Password", "Name", "Surname", "City", "Country", "Phone", "Profession", "CompanyInformation", "Role", "IsActivated")
+VALUES (7, 'anjamax@gmail.com', 'anja1107', 'Anja', 'Maksimovic', 'Novi Sad', 'Srbija', '063535191', 'Medicinski radnik', 'Maks Promet', 0, True);
