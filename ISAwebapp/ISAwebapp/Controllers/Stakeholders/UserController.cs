@@ -22,7 +22,7 @@ namespace API.Controllers.Stakeholders
             return CreateResponse(result);
         }
 
-        [HttpPost("{companyId:int}")]
+        [HttpPost("createCompanyAdmin/{companyId:int}")]
         public ActionResult<UserDto> CreateNewCompanyAdmin([FromBody] UserDto userDto, [FromRoute] int companyId)
         {
             return CreateResponse(_userService.AddNewCompanyAdmin(userDto, companyId));
@@ -33,6 +33,13 @@ namespace API.Controllers.Stakeholders
         {
             return CreateResponse(_userService.GetPaged(page, pageSize));
         }
+
+        [HttpGet("getCompanyAdmins/{companyId:int}")]
+        public ActionResult<UserDto> GetCompanyAdmins([FromRoute] int companyId)
+        {
+            return CreateResponse(_userService.GetCompanyAdmins(companyId));
+        }
+
 
         [HttpGet("get/{userId:int}")]
         public ActionResult<UserDto> Get([FromRoute] int userId)

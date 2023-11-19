@@ -35,6 +35,15 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
             _dbContext.SaveChanges();
             return companyAdmin;
         }
+
+        public List<User> GetCompanyAdmins(long companyId)
+        {
+            var companyAdmins = _dbContext.CompanyAdmins.ToList();
+            var users = _dbContext.Users.ToList();
+            
+            return users.FindAll(user => 
+                companyAdmins.Any(x => x.UserId == user.Id && x.CompanyId == companyId));
+        }
         //TODO: 2. DeleteCompanyAdmin
     }
 }

@@ -6,5 +6,6 @@
         User? GetActiveUserByEmail(string email);
         User Create(User user);
         CompanyAdmin Create(CompanyAdmin companyAdmin);
+        List<User> GetCompanyAdmins(long companyId);
     }
 }

@@ -38,5 +38,11 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             _userRepository.Create(new CompanyAdmin(companyId, user.Id));
             return MapToDto(user);
         }
+
+        public Result<List<UserDto>> GetCompanyAdmins(long companyId)
+        {
+            var users = _userRepository.GetCompanyAdmins(companyId);
+            return MapToDto(users);
+        }
     }
 }
