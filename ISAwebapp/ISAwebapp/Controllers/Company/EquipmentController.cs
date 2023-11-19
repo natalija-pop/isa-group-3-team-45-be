@@ -25,5 +25,11 @@ namespace API.Controllers.Company
         {
             return CreateResponse(_equipmentService.Search(searchKeyword));
         }
+
+        [HttpGet("getCompanyEquipment/{companyId:int}")]
+        public ActionResult<EquipmentDto> GetByCompanyId([FromQuery] int page, [FromQuery] int pageSize, [FromRoute] int companyId)
+        {
+            return CreateResponse(_equipmentService.GetByCompanyId(page, pageSize, companyId));
+        }
     }
 }
