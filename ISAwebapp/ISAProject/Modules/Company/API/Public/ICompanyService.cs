@@ -11,6 +11,7 @@ namespace ISAProject.Modules.Company.API.Public
         Result<CompanyDto> Update(CompanyDto companyDto);
         Result Delete(int id);
         Result<PagedResult<CompanyDto>> GetPaged(int page, int pageSize);
+        Result<CompanyDto> CreateCompany(CompanyDto companyDto);
         Result<List<CompanyDto>> Search(string name, string city);
     }
 }

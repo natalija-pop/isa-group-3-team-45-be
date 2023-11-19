@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ISAProject.Modules.Stakeholders.Core.Domain;
+﻿using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
-using ISAProject.Modules.Stakeholders.Infrastructure.Database;
 
 namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
 {
@@ -34,5 +28,22 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
         {
             return _dbContext.Users.FirstOrDefault(user => user.Email == email && user.IsActivated);
         }
+        
+        public CompanyAdmin Create(CompanyAdmin companyAdmin)
+        {
+            _dbContext.CompanyAdmins.Add(companyAdmin);
+            _dbContext.SaveChanges();
+            return companyAdmin;
+        }
+
+        public List<User> GetCompanyAdmins(long companyId)
+        {
+            var companyAdmins = _dbContext.CompanyAdmins.ToList();
+            var users = _dbContext.Users.ToList();
+            
+            return users.FindAll(user => 
+                companyAdmins.Any(x => x.UserId == user.Id && x.CompanyId == companyId));
+        }
+        //TODO: 2. DeleteCompanyAdmin
     }
 }

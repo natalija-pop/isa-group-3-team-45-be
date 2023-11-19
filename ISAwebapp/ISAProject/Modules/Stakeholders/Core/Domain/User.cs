@@ -1,5 +1,4 @@
 ﻿using ISAProject.Configuration.Core.Domain;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace ISAProject.Modules.Stakeholders.Core.Domain
 {
@@ -16,6 +15,8 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
         public string CompanyInformation { get; private set; }
         public UserRole Role { get; private set; }
         public bool IsActivated { get; private set; } = false;
+
+        public User() {}
 
         public User(string email, string password, string name, string surname, string city, string country, string phone, string profession, string companyInformation, UserRole role, bool isActivated)
         {
