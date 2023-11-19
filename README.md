@@ -8,3 +8,9 @@ Add-Migration -Name Init -Context CompanyContext -Project ISAProject -StartupPro
 Update-Database -Context CompanyContext -Project ISAProject -StartupProject API
 
 Test podaci i model class dijagram se nalaze u folderu TestData.
+
+Komande za kreiranje sema u bazi podataka:
+CREATE SCHEMA "stakeholders";
+CREATE SCHEMA "company";
+
+Test podaci su u obliku txt fajla u kojima su skripte za insert podataka u bazu.
