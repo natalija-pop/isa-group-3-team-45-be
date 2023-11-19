@@ -28,7 +28,7 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITokenGenerator, JwtGenerator>();
-
+            services.AddScoped<IEmailService,  EmailService>();
             services.AddScoped<IUserService, UserService>();
         }
 

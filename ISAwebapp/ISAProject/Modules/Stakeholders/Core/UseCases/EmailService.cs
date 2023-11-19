@@ -1,57 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using ISAProject.Modules.Stakeholders.API.Public;
 
 namespace ISAProject.Modules.Stakeholders.Core.UseCases
 {
     public class EmailService : IEmailService
     {
-        private readonly string _smtpServer;
-        private readonly int _smtpPort;
-        private readonly string _smtpUsername;
-        private readonly string _smtpPassword;
+        private readonly string _smtpServer = "smtp.gmail.com";
+        private readonly int _port = 587;
+        private readonly string _email = "anja1107.am@gmail.com";
+        private readonly string _password = "gorblechbsniujnn";
 
-        public EmailService()
+        public void SendActivationEmail(string recipientEmail, string activationLink)
         {
-            // Ovde bi trebalo da dobijete ove informacije iz konfiguracije
-            _smtpServer = "smtp.gmail.com";
-            _smtpPort = 587; // Port za SMTP server (obično je 587 ili 465 za SSL)
-            _smtpUsername = "anja1107.am@gmail.com";
-            _smtpPassword = "anjanjaa.01";
-        }
-        public async Task SendEmailAsync(string toEmail, string subject, string body)
-        {
-            try
+            string link = $"http://localhost:4200/activate?token={activationLink}";
+            using (MailMessage mail = new MailMessage())
             {
-                using (MailMessage mailMessage = new MailMessage())
+                mail.From = new MailAddress(_email);
+                mail.To.Add(recipientEmail);
+                mail.Subject = "Aktivacija naloga";
+                mail.Body = $"Kliknite na ovaj link da biste aktivirali nalog: {link}";
+                mail.IsBodyHtml = true;
+
+                using (SmtpClient smtp = new SmtpClient(_smtpServer, _port))
                 {
-                    mailMessage.From = new MailAddress(_smtpUsername);
-                    mailMessage.To.Add(toEmail);
-                    mailMessage.Subject = subject;
-                    mailMessage.Body = body;
-                    mailMessage.IsBodyHtml = true; // Postavite na true ako je sadržaj HTML
-
-                    using (SmtpClient smtpClient = new SmtpClient(_smtpServer, _smtpPort))
+                    smtp.Credentials = new NetworkCredential(_email, _password);
+                    smtp.EnableSsl = true;
+                    try
                     {
-                        smtpClient.UseDefaultCredentials = false;
-                        smtpClient.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
-                        smtpClient.EnableSsl = true; // Postavite na true ako koristite SSL
-
-                        await smtpClient.SendMailAsync(mailMessage);
+                        smtp.Send(mail);
+                        Console.WriteLine("Mejl je uspesno poslat!");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Doslo je do greske prilikom slanja mejla: " + ex.Message);
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                // Obrada greške prilikom slanja emaila
-                Console.WriteLine("Greška prilikom slanja emaila: " + ex.Message);
-                throw;
-            }
         }
+
     }
 }
