@@ -1,5 +1,6 @@
 ﻿using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
+using ISAProject.Modules.Company.Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Company
@@ -45,6 +46,11 @@ namespace API.Controllers.Company
             return CreateResponse(_companyService.Delete(companyId));
         }
 
+        [HttpGet("getSearchResults")]
+        public ActionResult<EquipmentDto> GetSearchResults([FromQuery] string? name, [FromQuery] string? city)
+        {
+            return CreateResponse(_companyService.Search(name, city));
+        }
 
     }
 }
