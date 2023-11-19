@@ -17,6 +17,7 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database
             modelBuilder.HasDefaultSchema("stakeholders");
 
             modelBuilder.Entity<User>().ToTable("Users");
+
             modelBuilder.Entity<CompanyAdmin>().ToTable("CompanyAdmins");
 
             ConfigureStakeholder(modelBuilder);
@@ -24,11 +25,6 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database
 
         private static void ConfigureStakeholder(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CompanyAdmin>()
-                .HasOne(a => a.User)
-                .WithMany()
-                .HasForeignKey(a => a.UserId)
-                .IsRequired();
         }
     }
 }

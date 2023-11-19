@@ -13,15 +13,16 @@ namespace ISAProject.Modules.Company.Core.Domain
         public virtual ICollection<Equipment> Equipment { get; private set; }
         
         [NotMapped]
-        public virtual ICollection<CompanyAdmin> Admins { get; private set; }
+        public virtual ICollection<User> Admins { get; private set; }
 
         public Company() {}
-        public Company(string name, string description, Address address)
+        public Company(string name, string description, Address address, ICollection<User> users)
         {
             Validate(name, description);
             Name = name;
             Description = description;
             Address = address;
+            Admins = users;
         }
 
         private static void Validate(string name, string description)

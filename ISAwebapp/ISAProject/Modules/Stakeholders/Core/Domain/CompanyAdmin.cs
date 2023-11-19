@@ -1,25 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using ISAProject.Configuration.Core.Domain;
+﻿using ISAProject.Configuration.Core.Domain;
 
 namespace ISAProject.Modules.Stakeholders.Core.Domain
 {
     public class CompanyAdmin: Entity
     {
+        
         public long CompanyId { get; set; }
-
-        [NotMapped]
-        public Company.Core.Domain.Company Company { get; set; }
         public long UserId { get; set; }
-        public User User { get; set; }
         
         public CompanyAdmin() {}
 
-        public CompanyAdmin(long userId, Company.Core.Domain.Company company)
+        public CompanyAdmin(long companyId, long userId)
         {
-            Validate(userId, company.Id);
+            Validate(userId, companyId);
+            CompanyId = companyId;
             UserId = userId;
-            Company = company;
-            CompanyId = company.Id;
         }
 
         private static void Validate(long userId, long companyId)

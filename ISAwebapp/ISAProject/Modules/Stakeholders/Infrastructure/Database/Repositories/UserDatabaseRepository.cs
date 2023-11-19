@@ -28,5 +28,13 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
         {
             return _dbContext.Users.FirstOrDefault(user => user.Email == email && user.IsActivated);
         }
+        
+        public CompanyAdmin Create(CompanyAdmin companyAdmin)
+        {
+            _dbContext.CompanyAdmins.Add(companyAdmin);
+            _dbContext.SaveChanges();
+            return companyAdmin;
+        }
+        //TODO: 2. DeleteCompanyAdmin
     }
 }

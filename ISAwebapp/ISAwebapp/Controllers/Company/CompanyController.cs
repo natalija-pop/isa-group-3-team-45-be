@@ -18,7 +18,7 @@ namespace API.Controllers.Company
         [HttpPost]
         public ActionResult<CompanyDto> Create([FromBody] CompanyDto companyDto)
         {
-            var result = _companyService.Create(companyDto);
+            var result = _companyService.CreateCompany(companyDto);
             return CreateResponse(result);
         }
 
