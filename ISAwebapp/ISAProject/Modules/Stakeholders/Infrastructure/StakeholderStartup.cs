@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
 using ISAProject.Configuration.Core.UseCases;
-using ISAProject.Modules.Company.Infrastructure.Database;
 using ISAProject.Modules.Stakeholders.Core.Domain;
 
 namespace ISAProject.Modules.Stakeholders.Infrastructure
@@ -36,6 +35,7 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure
         {
             services.AddScoped(typeof(IUserRepository), typeof(UserDatabaseRepository));
             services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudRepository<User, StakeholdersContext>));
+            services.AddScoped(typeof(ICompanyAdminRepo), typeof(CompanyAdminRepository));
 
             services.AddDbContext<StakeholdersContext>(opt =>
                 opt.UseNpgsql(DatabaseConnectionBuilder.Build("stakeholders"),

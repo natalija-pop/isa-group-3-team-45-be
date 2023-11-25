@@ -11,8 +11,8 @@ namespace ISAProject.Modules.Company.Core.UseCases
 {
     public class CompanyService: CrudService<CompanyDto, Domain.Company>, ICompanyService
     {
-        private readonly IUserRepository _userRepository;
-        public CompanyService(ICrudRepository<Domain.Company> crudRepository, IMapper mapper, IUserRepository userRepository) : base(crudRepository, mapper)
+        private readonly ICompanyAdminRepo _userRepository;
+        public CompanyService(ICrudRepository<Domain.Company> crudRepository, IMapper mapper, ICompanyAdminRepo userRepository) : base(crudRepository, mapper)
         {
             _userRepository = userRepository;
         }
@@ -20,11 +20,8 @@ namespace ISAProject.Modules.Company.Core.UseCases
         public Result<CompanyDto> CreateCompany(CompanyDto companyDto)
         {
             var company = CrudRepository.Create(MapToDomain(companyDto));
-            var adminDto = companyDto.Admins.FirstOrDefault();
-            var admin = _userRepository.Create(
-                UserConverter.ConvertToDomain(adminDto));
-
-            var companyAdmin = _userRepository.Create(new CompanyAdmin(company.Id, admin.Id));
+            var user = _userRepository.Create(
+                company.Admins.FirstOrDefault(), company.Id);
             return MapToDto(company);
         }
 
