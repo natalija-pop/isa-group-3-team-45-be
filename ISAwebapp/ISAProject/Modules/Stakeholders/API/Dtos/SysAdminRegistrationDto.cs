@@ -1,11 +1,8 @@
-﻿using ISAProject.Modules.Stakeholders.Core.Domain;
-
-namespace ISAProject.Modules.Stakeholders.API.Dtos
+﻿namespace ISAProject.Modules.Stakeholders.API.Dtos
 {
-    public class UserRegistrationDto
+    public class SysAdminRegistrationDto
     {
         public string Email { get; set; }
-        public string Password { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string City { get; set; }
@@ -13,7 +10,5 @@ namespace ISAProject.Modules.Stakeholders.API.Dtos
         public string Phone { get; set; }
         public string Profession { get; set; }
         public string CompanyInformation { get; set; }
-        public UserRole Role { get; set; }
-        public bool IsActivated { get; set; }
     }
 }
