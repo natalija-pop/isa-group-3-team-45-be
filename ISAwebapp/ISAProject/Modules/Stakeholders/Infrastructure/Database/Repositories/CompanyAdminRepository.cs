@@ -12,7 +12,6 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
             _dbContext = dbContext;
         }
 
-
         public User Create(User user, long companyId)
         {
             _dbContext.Users.Add(user);
@@ -25,7 +24,6 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
         {
             var companyAdmins = _dbContext.CompanyAdmins.ToList();
             var users = _dbContext.Users.ToList();
-
             return users.FindAll(user =>
                 companyAdmins.Any(x => x.UserId == user.Id && x.CompanyId == companyId));
         }

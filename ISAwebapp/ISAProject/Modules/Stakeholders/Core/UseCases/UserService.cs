@@ -10,7 +10,7 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
 {
     public class UserService : CrudService<UserDto, User>, IUserService
     {
-        public readonly IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ICompanyAdminRepo _companyAdminRepository;
 
         public UserService(ICrudRepository<User> repository, IMapper mapper, IUserRepository userRepository, ICompanyAdminRepo companyAdminRepository) : base(repository, mapper)
@@ -36,7 +36,7 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
 
         public Result<UserDto> AddNewCompanyAdmin(UserDto userDto, long companyId)
         {
-            var user = Create(MapToDomain(userDto));
+            var user = MapToDomain(userDto);
             _companyAdminRepository.Create(user, companyId);
             return MapToDto(user);
         }
