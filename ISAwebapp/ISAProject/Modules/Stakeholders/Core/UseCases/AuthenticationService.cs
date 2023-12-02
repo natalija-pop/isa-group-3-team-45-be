@@ -24,6 +24,13 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
         {
             var user = _userRepository.GetActiveUserByEmail(credentials.Email);
             if (user == null || credentials.Password != user.Password || user.IsActivated == false) return Result.Fail(FailureCode.NotFound);
+            if (user is { Role: UserRole.SystemAdministrator, ForcePasswordReset: true })
+                return Result.Ok( new AuthenticationTokensDto
+                    {
+                        Id = -1,
+                        AccessToken = "ForcePasswordReset"
+                    }
+                );
             return _tokenGenerator.GenerateAccessToken(user);
         }
 
