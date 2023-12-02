@@ -58,5 +58,11 @@ namespace API.Controllers.Stakeholders
         {
             return CreateResponse(_userService.Delete(userId));
         }
+
+        [HttpPut("changePassword")]
+        public ActionResult<bool> ChangePassword([FromBody] PasswordChangeDto passwordChangeDto)
+        {
+            return CreateResponse(_userService.ChangePassword(passwordChangeDto));
+        }
     }
 }

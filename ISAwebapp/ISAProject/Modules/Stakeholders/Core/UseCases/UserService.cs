@@ -46,5 +46,14 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             var users = _companyAdminRepository.GetCompanyAdmins(companyId);
             return MapToDto(users);
         }
+
+        public Result<bool> ChangePassword(PasswordChangeDto passwordChange)
+        {
+            var user = _userRepository.GetActiveUserByEmail(passwordChange.Email);
+            if (user == null || passwordChange.OldPassword != user.Password || user.IsActivated == false) return Result.Fail(FailureCode.NotFound);
+            if (!user.ChangePassword(passwordChange.NewPassword)) return false;
+            CrudRepository.Update(user);
+            return true;
+        }
     }
 }
