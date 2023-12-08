@@ -15,6 +15,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
         public string CompanyInformation { get; private set; }
         public UserRole Role { get; private set; }
         public bool IsActivated { get; private set; } = false;
+        public bool ForcePasswordReset { get; private set; } 
 
         public User() {}
 
@@ -31,6 +32,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
             CompanyInformation = companyInformation;
             Role = role;
             IsActivated = isActivated;
+            ForcePasswordReset = role == UserRole.SystemAdministrator;
             Validate();
         }
         private void Validate()
@@ -50,8 +52,17 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
         {
             return Role.ToString().ToLower();
         }
-    }
 
+        public bool ChangePassword(string newPassword)
+        {
+            //TODO: Napraviti bolju validaciju lozinke
+            if (string.IsNullOrWhiteSpace(newPassword) && Password.Equals(newPassword)) return false;
+            Password = newPassword;
+            if (ForcePasswordReset && Role == UserRole.SystemAdministrator) ForcePasswordReset = false;
+            return true;
+        }
+
+    }
     public enum UserRole
     {
         Employee,

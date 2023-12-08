@@ -1,5 +1,6 @@
 ﻿using System.Net.Mail;
 using System.Net;
+using System.Text;
 using ISAProject.Modules.Stakeholders.API.Public;
 
 namespace ISAProject.Modules.Stakeholders.Core.UseCases
@@ -39,5 +40,44 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             }
         }
 
+        public void SendRegistrationInfoEmail(string recipientEmail, string recipientGeneratedPassword)
+        {
+            var mailBodyBuilder = new StringBuilder("Poštovani,<br><br>");
+            mailBodyBuilder.Append("Vaši kredencijali za logovanje su:<br><br>");
+            mailBodyBuilder.Append($"Korisničko ime:{recipientEmail}<br>" +
+                                   $"Lozinka: {recipientGeneratedPassword}<br><br>");
+            mailBodyBuilder.Append("Molimo Vas da promenite datu lozinku prilikom prvog prijavljivanja na sistem.");
+            var emailBody = mailBodyBuilder.ToString();
+            var emailSubject = "Uspešna registracija naloga";
+
+            SendEmail(recipientEmail, emailSubject, emailBody);
+        }
+
+        private void SendEmail(string recipientEmail, string emailSubject, string emailBody)
+        {
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress(_email);
+                mail.To.Add(recipientEmail);
+                mail.Subject = emailSubject;
+                mail.Body = emailBody;
+                mail.IsBodyHtml = true;
+
+                using (SmtpClient smtp = new SmtpClient(_smtpServer, _port))
+                {
+                    smtp.Credentials = new NetworkCredential(_email, _password);
+                    smtp.EnableSsl = true;
+                    try
+                    {
+                        smtp.Send(mail);
+                        Console.WriteLine("Email successfully sent!");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+        }
     }
 }
