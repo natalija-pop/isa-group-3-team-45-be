@@ -56,7 +56,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
         public bool ChangePassword(string newPassword)
         {
             //TODO: Napraviti bolju validaciju lozinke
-            if (string.IsNullOrWhiteSpace(newPassword)) return false;
+            if (string.IsNullOrWhiteSpace(newPassword) && Password.Equals(newPassword)) return false;
             Password = newPassword;
             if (ForcePasswordReset && Role == UserRole.SystemAdministrator) ForcePasswordReset = false;
             return true;

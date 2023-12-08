@@ -55,7 +55,7 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             try
             {
                 var password = _passwordGenerator.GeneratePassword();
-                var user = _userRepository.Create(new User(account.Email, password, account.Name, account.Surname, account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation, UserRole.SystemAdministrator, true));
+                _userRepository.Create(new User(account.Email, password, account.Name, account.Surname, account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation, UserRole.SystemAdministrator, true));
                 return new CredentialsDto
                 {
                     Email = account.Email,

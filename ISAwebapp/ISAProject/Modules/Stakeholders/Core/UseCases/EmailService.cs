@@ -43,7 +43,7 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
         public void SendRegistrationInfoEmail(string recipientEmail, string recipientGeneratedPassword)
         {
             var mailBodyBuilder = new StringBuilder("Poštovani,<br><br>");
-            mailBodyBuilder.Append("Vaši kredencijali za logovanje su:<br>");
+            mailBodyBuilder.Append("Vaši kredencijali za logovanje su:<br><br>");
             mailBodyBuilder.Append($"Korisničko ime:{recipientEmail}<br>" +
                                    $"Lozinka: {recipientGeneratedPassword}<br><br>");
             mailBodyBuilder.Append("Molimo Vas da promenite datu lozinku prilikom prvog prijavljivanja na sistem.");
