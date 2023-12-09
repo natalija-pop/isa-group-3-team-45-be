@@ -1,6 +1,5 @@
 ﻿using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
-using ISAProject.Modules.Company.Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Company
