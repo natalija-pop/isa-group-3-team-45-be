@@ -21,6 +21,10 @@ namespace ISAProject.Modules.Company.Infrastructure.Database
             modelBuilder.Entity<Core.Domain.Company>().ToTable("Companies");
             modelBuilder.Entity<Core.Domain.Company>()
                 .Property(item => item.Address).HasColumnType("jsonb");
+            modelBuilder.Entity<Core.Domain.Company>()
+                .Property(item => item.WorkingHours).HasColumnType("jsonb");
+
+
 
             modelBuilder.Entity<Equipment>().ToTable("Equipments");
 

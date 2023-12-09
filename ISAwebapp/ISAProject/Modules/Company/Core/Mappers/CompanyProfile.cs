@@ -8,8 +8,8 @@ namespace ISAProject.Modules.Company.Core.Mappers
     {
         public CompanyProfile()
         {
-            CreateMap<AddressDto, Address>();
-            CreateMap<Address, AddressDto>();
+            CreateMap<Address, AddressDto>().ReverseMap();
+            CreateMap<WorkingHours, WorkingHoursDto>().ReverseMap();
 
             CreateMap<CompanyDto, Domain.Company>()
                 .ForMember(dest => dest.Address, opt =>
