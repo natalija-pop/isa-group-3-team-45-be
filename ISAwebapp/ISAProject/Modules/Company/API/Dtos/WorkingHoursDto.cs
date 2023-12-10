@@ -2,8 +2,8 @@
 {
     public class WorkingHoursDto
     {
-        public TimeSpan OpeningHours { get; set; }
-        public TimeSpan ClosingHours { get; set; }
+        public string OpeningHours { get; set; }
+        public string ClosingHours { get; set; }
         public bool Weekends { get; set; }
     }
 }
