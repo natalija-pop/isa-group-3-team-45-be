@@ -3,8 +3,6 @@ using FluentResults;
 using ISAProject.Configuration.Core.UseCases;
 using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
-using ISAProject.Modules.Stakeholders.API.Converters;
-using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
 
 namespace ISAProject.Modules.Company.Core.UseCases
