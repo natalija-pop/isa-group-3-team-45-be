@@ -11,6 +11,7 @@ namespace ISAProject.Modules.Company.Core.Mappers
         {
             CreateMap<Address, AddressDto>().ReverseMap();
             CreateMap<WorkingHours, WorkingHoursDto>().ReverseMap();
+            CreateMap<Appointment, AppointmentDto>().ReverseMap();
 
             CreateMap<CompanyDto, Domain.Company>()
                 .ForMember(dest => dest.Address, opt =>
