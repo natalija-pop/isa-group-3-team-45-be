@@ -12,6 +12,7 @@ namespace ISAProject.Modules.Company.Core.Domain
         public int Rating { get; set; }
         public WorkingHours WorkingHours { get; private set; }
         public virtual ICollection<Equipment> Equipment { get; private set; }
+        public virtual ICollection<Appointment> WorkCalendar { get; private set; }
         
         [NotMapped]
         public virtual ICollection<User> Admins { get; private set; }

@@ -32,7 +32,7 @@ namespace ISAProject.Modules.Company.Infrastructure
             services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudRepository<Equipment, CompanyContext>));
 
             services.AddDbContext<CompanyContext>(opt =>
-                opt.UseNpgsql(DatabaseConnectionBuilder.Build("company")));
+                opt.UseNpgsql(DatabaseConnectionBuilder.Build("companies")));
         }
     }
 }
