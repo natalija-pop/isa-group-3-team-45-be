@@ -9,17 +9,16 @@ namespace ISAProject.Modules.Company.Core.Domain
         public string Description { get; private set; }
         public EquipmentType Type { get; private set; }
         public long CompanyId { get; set; }
-        public virtual Company Company { get; set; }
+        public virtual Company? Company { get; set; }
 
         public Equipment() {}
         
-        public Equipment(string name, string description, EquipmentType type, Company company)
+        public Equipment(string name, string description, EquipmentType type, long companyId)
         {
             Name = name;
             Description = description;
             Type = type;
-            Company = company;
-            CompanyId = company.Id;
+            CompanyId = companyId;
         }
     }
 }
