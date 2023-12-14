@@ -36,7 +36,6 @@ namespace API.Controllers.Company
         [HttpPost("create")]
         public ActionResult<EquipmentDto> Create([FromBody] EquipmentDto equipmentDto)
         {
-            //equipmentDto.Company = null;
             var result = _equipmentService.Create(equipmentDto);
             return CreateResponse(result);
         }

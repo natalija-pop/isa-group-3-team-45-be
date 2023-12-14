@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using ISAProject.Configuration.Core.UseCases;
+using ISAProject.Modules.Company.API.Converters;
 using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
@@ -45,6 +46,22 @@ namespace ISAProject.Modules.Company.Core.UseCases
                 }
             }
 
+            return searchResults;
+        }
+
+        public Result<List<EquipmentDto>> SearchCompanyEquipment(int companyId, string name)
+        {
+            var searchResults = new List<EquipmentDto>();
+            var company = CrudRepository.Get(companyId);
+            var companyEquipment = company.Equipment;
+
+            foreach (var equipment in companyEquipment)
+            {
+                if (name != null && equipment.Name.ToLower().Contains(name?.ToLower()))
+                {
+                    searchResults.Add(EquipmentConverter.ToDto(equipment));
+                }
+            }
             return searchResults;
         }
     }
