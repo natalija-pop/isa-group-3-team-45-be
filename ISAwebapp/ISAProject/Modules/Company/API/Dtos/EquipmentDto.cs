@@ -6,6 +6,7 @@
         public string Name { get; set; }
         public string Description { get; set; }
         public EquipmentType Type { get; set; }
-        public CompanyDto Company { get; set; }
+        public int CompanyId { get; set; }
+        public CompanyDto? Company { get; set; }
     }
 }

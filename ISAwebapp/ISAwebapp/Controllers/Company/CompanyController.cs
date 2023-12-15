@@ -51,5 +51,11 @@ namespace API.Controllers.Company
             return CreateResponse(_companyService.Search(name, city));
         }
 
+        [HttpGet("getCompanyEquipmentSearchResults/{companyId:int}")]
+        public ActionResult<EquipmentDto> GetCompanyEquipmentSearchResults([FromRoute] int companyId, [FromQuery] string? searchKeyword)
+        {
+            return CreateResponse(_companyService.SearchCompanyEquipment(companyId, searchKeyword));
+        }
+
     }
 }
