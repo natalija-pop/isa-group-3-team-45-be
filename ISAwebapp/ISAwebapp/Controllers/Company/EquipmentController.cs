@@ -40,6 +40,13 @@ namespace API.Controllers.Company
             return CreateResponse(result);
         }
 
+        [HttpPut("update/{equipmentId:int}")]
+        public ActionResult<EquipmentDto> Update([FromBody] EquipmentDto equipmentDto)
+        {
+            var result = _equipmentService.Update(equipmentDto);
+            return CreateResponse(result);
+        }
+
         [HttpDelete("delete/{equipmentId:int}")]
         public ActionResult<EquipmentDto> Delete([FromRoute] int equipmentId)
         {
