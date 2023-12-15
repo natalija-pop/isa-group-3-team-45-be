@@ -12,8 +12,8 @@ namespace ISAProject.Modules.Company.Core.Domain
             get => _duration;
         }
 
-        public string AdminName { get; private set; }
-        public string AdminSurname { get; private set; }
+        public string AdminName { get;  set; }
+        public string AdminSurname { get;  set; }
         public string? CustomerName { get; set; } = null;
         public string? CustomerSurname { get; set; } = null;
         public long CompanyId { get; init; }
