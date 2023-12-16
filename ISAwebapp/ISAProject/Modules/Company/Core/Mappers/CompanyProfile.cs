@@ -22,7 +22,9 @@ namespace ISAProject.Modules.Company.Core.Mappers
                                 src.Address.Street,
                                 src.Address.Number,
                                 src.Address.City,
-                                src.Address.Country
+                                src.Address.Country,
+                                src.Address.Latitude,
+                                src.Address.Longitude
                             ));
                     }
                 )
@@ -43,7 +45,9 @@ namespace ISAProject.Modules.Company.Core.Mappers
                             Street = src.Address.Street,
                             Number = src.Address.Number,
                             City = src.Address.City,
-                            Country = src.Address.Country
+                            Country = src.Address.Country,
+                            Latitude = src.Address.Latitude,
+                            Longitude = src.Address.Longitude
                         });
                 })
                 .ForMember(dest => dest.WorkingHours, opt =>
