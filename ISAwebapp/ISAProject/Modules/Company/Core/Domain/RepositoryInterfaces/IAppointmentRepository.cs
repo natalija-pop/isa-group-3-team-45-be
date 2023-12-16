@@ -12,5 +12,7 @@ namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
         List<Appointment> GetAll();
         Appointment Create(Appointment appointment);
         Appointment Update(Appointment appointment);
+        Company GetAppointmentsCompany(long companyId);
+
     }
 }

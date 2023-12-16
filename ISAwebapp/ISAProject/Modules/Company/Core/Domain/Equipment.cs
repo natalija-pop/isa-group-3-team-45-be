@@ -8,15 +8,18 @@ namespace ISAProject.Modules.Company.Core.Domain
         public string Name { get; private set; }
         public string Description { get; private set; }
         public EquipmentType Type { get; private set; }
+        public int Quantity { get; private set; }
+        public int ReservedQuantity { get; private set; }
         public long CompanyId { get; set; }
-        public virtual Company? Company { get; set; }
 
         public Equipment() {}
-        
-        public Equipment(string name, string description, EquipmentType type, long companyId)
+
+        public Equipment(string name, string description, EquipmentType type, int quantity, long companyId)
         {
             Name = name;
             Description = description;
+            Quantity = quantity;
+            ReservedQuantity = 0;
             Type = type;
             CompanyId = companyId;
         }
