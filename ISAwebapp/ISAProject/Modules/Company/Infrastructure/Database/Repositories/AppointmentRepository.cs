@@ -51,5 +51,12 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
             }
             return appointment;
         }
+
+        public Company.Core.Domain.Company GetAppointmentsCompany(long companyId)
+        {
+            var company = _context.Companies.Find(companyId);
+            if (company == null) throw new KeyNotFoundException("Company not found.");
+            return company;
+        }
     }
 }

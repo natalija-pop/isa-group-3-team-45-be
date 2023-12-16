@@ -5,7 +5,7 @@ namespace ISAProject.Modules.Company.Core.Domain
     public class Appointment: Entity
     {
         //Duration in minutes
-        private readonly int _duration = 30;
+        private readonly int _duration = 60;
         public DateTime Start { get; init; }
         public int Duration
         {
@@ -17,6 +17,8 @@ namespace ISAProject.Modules.Company.Core.Domain
         public string? CustomerName { get; set; } = null;
         public string? CustomerSurname { get; set; } = null;
         public long CompanyId { get; init; }
+        public bool Scheduled { get; set; }
+        public virtual ICollection<Equipment> Equipment { get; set; }
 
         public Appointment()
         {
@@ -30,6 +32,7 @@ namespace ISAProject.Modules.Company.Core.Domain
             CustomerName = customerName;
             CustomerSurname = customerSurname;
             CompanyId = companyId;
+            Scheduled = false;
         }
     }
 }

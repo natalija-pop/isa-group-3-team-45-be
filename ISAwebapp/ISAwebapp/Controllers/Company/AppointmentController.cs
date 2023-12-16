@@ -39,5 +39,11 @@ namespace API.Controllers.Company
             return CreateResponse(_appointmentService.Update(appointmentDto));
         }
 
+        [HttpGet("getRecommendedAppointments")]
+        public ActionResult<AppointmentDto> GetRecommendedAppointments([FromQuery] DateTime selectedDate, [FromQuery] int companyId)
+        {
+            return CreateResponse(_appointmentService.GenerateRecommendedAppointments(selectedDate, companyId));
+        }
+
     }
 }

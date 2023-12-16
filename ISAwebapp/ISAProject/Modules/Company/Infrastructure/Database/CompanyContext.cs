@@ -30,14 +30,12 @@ namespace ISAProject.Modules.Company.Infrastructure.Database
 
 
             modelBuilder.Entity<Appointment>().ToTable("Appointments");
+            modelBuilder.Entity<Appointment>()
+                .HasMany(e => e.Equipment)
+                .WithMany();
 
 
             modelBuilder.Entity<Equipment>().ToTable("Equipments");
-            modelBuilder.Entity<Equipment>()
-                .HasOne(e => e.Company)
-                .WithMany(e => e.Equipment)
-                .HasForeignKey(e => e.CompanyId)
-                .IsRequired();
         }
     }
 }
