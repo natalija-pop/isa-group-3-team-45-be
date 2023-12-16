@@ -52,9 +52,9 @@ namespace API.Startup
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("EmployeePolicy", policy => policy.RequireRole("Employee"));
-                options.AddPolicy("SystemAdministratorPolicy", policy => policy.RequireRole("SystemAdministrator"));
-                options.AddPolicy("CompanyAdministratorPolicy", policy => policy.RequireRole("CompanyAdministrator"));
+                options.AddPolicy("EmployeePolicy", policy => policy.RequireRole("employee"));
+                options.AddPolicy("SystemAdministratorPolicy", policy => policy.RequireRole("systemadministrator"));
+                options.AddPolicy("CompanyAdministratorPolicy", policy => policy.RequireRole("companyadministrator"));
             });
         }
     }
