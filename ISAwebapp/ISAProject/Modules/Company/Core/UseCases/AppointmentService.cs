@@ -157,5 +157,19 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return MapToDto(appointments);
         }
 
+
+        public bool IsEquipmentReserved(int equipmentId)
+        {
+            var allAppointments = GetAll().Value;
+            bool canEquipmentBeDeleted = !allAppointments.Any(appointment =>
+                appointment.Equipment.Any(equipment =>
+                    equipment.Id == equipmentId
+                )
+            );
+
+            return canEquipmentBeDeleted;
+
+        }
+
     }
 }
