@@ -47,6 +47,19 @@ namespace API.Controllers.Company
             return CreateResponse(_appointmentService.GenerateRecommendedAppointments(selectedDate, companyId));
         }
 
+        [HttpPost("checkvalidity")]
+        public ActionResult CheckAppointmentValidity([FromBody] AppointmentValidationDto appointmentValidation)
+        {
+            bool isAppointmentValid = _appointmentService.IsAppointmentValid(
+               appointmentValidation.Date,
+               appointmentValidation.CompanyId,
+               appointmentValidation.AdminName,
+               appointmentValidation.AdminSurname
+            );
+
+            return Ok(isAppointmentValid);
+        }
+
         [HttpGet("getCompanyAppointments/{companyId:int}")]
         public ActionResult<AppointmentDto> GetCompanyAppointments([FromRoute] int companyId)
         {

@@ -137,6 +137,20 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return null;
         }
 
+        public bool IsAppointmentValid (DateTime selectedDate, int companyId, string adminName, string adminSurname)
+        {
+            var allAppointments = GetAll().Value;
+            bool isAppointmentValid = !allAppointments.Any(appointment =>
+                 appointment.CompanyId == companyId &&
+                 appointment.AdminName == adminName &&
+                 appointment.AdminSurname == adminSurname &&
+                 appointment.Start <= selectedDate &&
+                 selectedDate < appointment.Start.AddMinutes(appointment.Duration));
+
+            return isAppointmentValid;
+
+        }
+
         public Result<List<AppointmentDto>> GetCompanyAppointments(int companyId)
         {
             var appointments = _repository.GetCompanyAppointments(companyId);
