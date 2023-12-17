@@ -1,5 +1,6 @@
 ﻿using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
+using ISAProject.Modules.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Company
@@ -9,11 +10,13 @@ namespace API.Controllers.Company
     { 
         private readonly IAppointmentService _appointmentService;
         private readonly IEquipmentService _equipmentService;
+        private readonly IEmailService _emailService;
 
-        public AppointmentController(IAppointmentService service, IEquipmentService equipmentService)
+        public AppointmentController(IAppointmentService service, IEquipmentService equipmentService, IEmailService emailService)
         {
             _appointmentService = service;
             _equipmentService = equipmentService;
+            _emailService = emailService;
         }
         
         [HttpPost]
@@ -24,8 +27,9 @@ namespace API.Controllers.Company
         }
 
         [HttpPost("additionalAppointment")]
-        public ActionResult<AppointmentDto> CreateAdditionalAppointment([FromBody] AppointmentDto appointmentDto)
+        public ActionResult<AppointmentDto> CreateAdditionalAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
+            _emailService.SendAppointmentConfirmation(appointmentDto, userEmail);
             var result = _appointmentService.CreateNewAppointment(appointmentDto);
             return CreateResponse(result);
         }
@@ -73,14 +77,11 @@ namespace API.Controllers.Company
             return CreateResponse(_appointmentService.GetCompanyAppointments(companyId));
         }
 
-        [HttpPut("reserveAppointment/{appointmentId:int}")]
-        public ActionResult<AppointmentDto>ReserveAppointment([FromBody] AppointmentDto appointmentDto)
+        [HttpPut("reserveAppointment")]
+        public ActionResult<AppointmentDto> ReserveAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
-            foreach (var eq in appointmentDto.Equipment)
-            {
-                eq.ReservedQuantity += 1;
-            }
-            return CreateResponse(_appointmentService.Update(appointmentDto));
+            _emailService.SendAppointmentConfirmation(appointmentDto, userEmail);
+            return CreateResponse(_appointmentService.ReserveAppointment(appointmentDto));
         }
 
         [HttpGet("checkIfEquipmentIsReserved/{equipmentId:int}")]

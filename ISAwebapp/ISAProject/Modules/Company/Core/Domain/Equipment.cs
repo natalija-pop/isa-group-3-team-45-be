@@ -9,7 +9,7 @@ namespace ISAProject.Modules.Company.Core.Domain
         public string Description { get; private set; }
         public EquipmentType Type { get; private set; }
         public int Quantity { get; private set; }
-        public int ReservedQuantity { get; private set; }
+        public int ReservedQuantity { get; set; }
         public long CompanyId { get; set; }
 
         public Equipment() {}
