@@ -75,5 +75,13 @@ namespace API.Controllers.Company
             }
             return CreateResponse(_appointmentService.Update(appointmentDto));
         }
+
+        [HttpGet("checkIfEquipmentIsReserved/{equipmentId:int}")]
+        public ActionResult IsEquipmentReserved([FromRoute] int equipmentId)
+        {
+            bool isEquipmentReserved = _appointmentService.IsEquipmentReserved(equipmentId);
+
+            return Ok(isEquipmentReserved);
+        }
     }
 }
