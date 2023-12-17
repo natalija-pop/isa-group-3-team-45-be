@@ -20,5 +20,7 @@ namespace ISAProject.Modules.Company.API.Public
         Result<List<AppointmentDto>> GetCompanyAppointments(int companyId);
         public bool IsAppointmentValid(DateTime selectedDate, int companyId, string adminName, string adminSurname);
         public bool IsEquipmentReserved(int equipmentId);
+        Result<AppointmentDto> CreateNewAppointment(AppointmentDto appointmentDto);
+
     }
 }
