@@ -2,6 +2,8 @@
 using System.Net;
 using System.Text;
 using ISAProject.Modules.Stakeholders.API.Public;
+using ISAProject.Modules.Company.Core.Domain;
+using QRCoder;
 
 namespace ISAProject.Modules.Stakeholders.Core.UseCases
 {

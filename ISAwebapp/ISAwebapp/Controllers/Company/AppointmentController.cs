@@ -8,10 +8,12 @@ namespace API.Controllers.Company
     public class AppointmentController : BaseApiController
     { 
         private readonly IAppointmentService _appointmentService;
+        private readonly IEquipmentService _equipmentService;
 
-        public AppointmentController(IAppointmentService service)
+        public AppointmentController(IAppointmentService service, IEquipmentService equipmentService)
         {
             _appointmentService = service;
+            _equipmentService = equipmentService;
         }
         
         [HttpPost]
@@ -45,5 +47,20 @@ namespace API.Controllers.Company
             return CreateResponse(_appointmentService.GenerateRecommendedAppointments(selectedDate, companyId));
         }
 
+        [HttpGet("getCompanyAppointments/{companyId:int}")]
+        public ActionResult<AppointmentDto> GetCompanyAppointments([FromRoute] int companyId)
+        {
+            return CreateResponse(_appointmentService.GetCompanyAppointments(companyId));
+        }
+
+        [HttpPut("reserveAppointment/{appointmentId:int}")]
+        public ActionResult<AppointmentDto>ReserveAppointment([FromBody] AppointmentDto appointmentDto)
+        {
+            foreach (var eq in appointmentDto.Equipment)
+            {
+                eq.ReservedQuantity += 1;
+            }
+            return CreateResponse(_appointmentService.Update(appointmentDto));
+        }
     }
 }

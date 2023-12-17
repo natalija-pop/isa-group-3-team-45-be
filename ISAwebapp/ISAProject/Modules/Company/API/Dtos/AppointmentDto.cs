@@ -1,4 +1,6 @@
-﻿namespace ISAProject.Modules.Company.API.Dtos
+﻿using ISAProject.Modules.Stakeholders.API.Dtos;
+
+namespace ISAProject.Modules.Company.API.Dtos
 {
     public class AppointmentDto
     {
@@ -11,5 +13,6 @@
         public string? CustomerSurname { get; set; }
         public int CompanyId { get; set; }
         public bool Scheduled { get; set; }
+        public ICollection<EquipmentDto>? Equipment { get; set; }
     }
 }

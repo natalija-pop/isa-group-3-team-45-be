@@ -5,17 +5,9 @@ using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Company.Core.Domain;
 using ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces;
-using ISAProject.Modules.Stakeholders.API.Dtos;
 using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ISAProject.Modules.Company.Core.UseCases
 {
@@ -32,9 +24,11 @@ namespace ISAProject.Modules.Company.Core.UseCases
         public Result<AppointmentDto> Create(AppointmentDto appointmentDto)
         {
             var result = _repository.Create(MapToDomain(appointmentDto));
+
             return MapToDto(result);
 
         }
+
         public Result<AppointmentDto> Get(int id)
         {
             var encounter = _repository.Get(id);
@@ -142,5 +136,12 @@ namespace ISAProject.Modules.Company.Core.UseCases
             }
             return null;
         }
+
+        public Result<List<AppointmentDto>> GetCompanyAppointments(int companyId)
+        {
+            var appointments = _repository.GetCompanyAppointments(companyId);
+            return MapToDto(appointments);
+        }
+
     }
 }
