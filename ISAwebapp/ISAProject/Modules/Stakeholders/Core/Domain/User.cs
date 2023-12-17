@@ -32,7 +32,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
             CompanyInformation = companyInformation;
             Role = role;
             IsActivated = isActivated;
-            ForcePasswordReset = role == UserRole.SystemAdministrator;
+            ForcePasswordReset = (role == UserRole.SystemAdministrator || role == UserRole.CompanyAdministrator);
             Validate();
         }
         private void Validate()
@@ -58,7 +58,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
             //TODO: Napraviti bolju validaciju lozinke
             if (string.IsNullOrWhiteSpace(newPassword) && Password.Equals(newPassword)) return false;
             Password = newPassword;
-            if (ForcePasswordReset && Role == UserRole.SystemAdministrator) ForcePasswordReset = false;
+            if (ForcePasswordReset && (Role == UserRole.SystemAdministrator || Role == UserRole.CompanyAdministrator)) ForcePasswordReset = false;
             return true;
         }
 
