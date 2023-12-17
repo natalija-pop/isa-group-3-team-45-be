@@ -23,6 +23,13 @@ namespace API.Controllers.Company
             return CreateResponse(result);
         }
 
+        [HttpPost("additionalAppointment")]
+        public ActionResult<AppointmentDto> CreateAdditionalAppointment([FromBody] AppointmentDto appointmentDto)
+        {
+            var result = _appointmentService.CreateNewAppointment(appointmentDto);
+            return CreateResponse(result);
+        }
+
         [HttpGet("getAll")]
         public ActionResult<AppointmentDto> GetAll()
         {
@@ -41,8 +48,8 @@ namespace API.Controllers.Company
             return CreateResponse(_appointmentService.Update(appointmentDto));
         }
 
-        [HttpGet("getRecommendedAppointments")]
-        public ActionResult<AppointmentDto> GetRecommendedAppointments([FromQuery] DateTime selectedDate, [FromQuery] int companyId)
+        [HttpGet("getRecommendedAppointments/{companyId:int}")]
+        public ActionResult<AppointmentDto> GetRecommendedAppointments([FromRoute] int companyId, [FromQuery] DateTime selectedDate)
         {
             return CreateResponse(_appointmentService.GenerateRecommendedAppointments(selectedDate, companyId));
         }

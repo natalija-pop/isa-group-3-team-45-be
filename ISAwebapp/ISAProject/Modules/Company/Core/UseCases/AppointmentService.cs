@@ -5,8 +5,11 @@ using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Company.Core.Domain;
 using ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces;
+using ISAProject.Modules.Company.Infrastructure.Database.Repositories;
 using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
+using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.Design;
 
 
 namespace ISAProject.Modules.Company.Core.UseCases
@@ -26,7 +29,17 @@ namespace ISAProject.Modules.Company.Core.UseCases
             var result = _repository.Create(MapToDomain(appointmentDto));
 
             return MapToDto(result);
+        }
 
+        public Result<AppointmentDto> CreateNewAppointment(AppointmentDto appointmentDto)
+        {
+            var equipmentDtos = appointmentDto.Equipment;
+            var equipmentIds = equipmentDtos.Select(e => e.Id).ToList();
+
+            var existingEquipment = _repository.GetWithIds(equipmentIds);
+            var appointment = MapToDomain(appointmentDto);
+            appointment.Equipment = existingEquipment;
+            return MapToDto(_repository.Create(appointment));
         }
 
         public Result<AppointmentDto> Get(int id)
@@ -54,8 +67,8 @@ namespace ISAProject.Modules.Company.Core.UseCases
         }
         public Result<List<AppointmentDto>> GetAll()
         {
-            var encounters = _repository.GetAll();
-            return MapToDto(encounters);
+            var appointments = _repository.GetAll();
+            return MapToDto(appointments);
         }
         
         private Company.Core.Domain.Company GetAppointmentsCompany(int id)
@@ -64,32 +77,17 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return company;
         }
 
-        public Result<List<Appointment>> GenerateRecommendedAppointments(DateTime selectedDate, int companyId)
+        private List<Appointment> GenerateAppointmentsForAllDay(DateTime selectedDate, Core.Domain.Company company, List<User> administrators)
         {
-            var allAppointments = GetAll().Value;
-
-            var company = GetAppointmentsCompany(companyId);
-
-            var openingHours = company.WorkingHours.OpeningHours;
-            var closingHours = company.WorkingHours.ClosingHours;
-
-            var existingAppointments = allAppointments
-                .Where(a => a.Start.Date == selectedDate.Date &&
-                            a.Start.TimeOfDay >= openingHours &&
-                            a.Start.TimeOfDay < closingHours)
-                .ToList();
-
-            var administrators = _companyAdminRepo.GetCompanyAdmins(companyId);
+            DateTime currentTime = selectedDate.Date.Add(company.WorkingHours.OpeningHours);
+            DateTime endTime = selectedDate.Date.Add(company.WorkingHours.ClosingHours);
 
             var recommendedAppointments = new List<Appointment>();
 
-            DateTime currentTime = selectedDate.Date.Add(openingHours);
-            DateTime endTime = selectedDate.Date.Add(closingHours);
-
-            while (currentTime.AddMinutes(existingAppointments.First().Duration) <= endTime)
+            while (currentTime.AddMinutes(60) <= endTime)
             {
-                User availableAdmin = FindAvailableAdministrator(administrators, existingAppointments, currentTime);
-                if (availableAdmin != null) 
+                User availableAdmin = administrators.FirstOrDefault();
+                if (availableAdmin != null)
                 {
                     var recommendedAppointment = new Appointment
                     {
@@ -98,13 +96,65 @@ namespace ISAProject.Modules.Company.Core.UseCases
                         AdminSurname = availableAdmin.Surname,
                         CustomerName = "",
                         CustomerSurname = "",
-                        CompanyId = companyId,
+                        CompanyId = company.Id,
                     };
 
                     recommendedAppointments.Add(recommendedAppointment);
                 }
 
-                currentTime = currentTime.AddMinutes(existingAppointments.First().Duration);
+                currentTime = currentTime.AddMinutes(60);
+            }
+            return recommendedAppointments;
+        }
+
+        public Result<List<Appointment>> GenerateRecommendedAppointments(DateTime selectedDate, int companyId)
+        {
+            var allAppointments = GetAll().Value;
+
+            var company = GetAppointmentsCompany(companyId);
+
+            var recommendedAppointments = new List<Appointment>();
+
+            var openingHours = company.WorkingHours.OpeningHours;
+            var closingHours = company.WorkingHours.ClosingHours;
+
+            var administrators = _companyAdminRepo.GetCompanyAdmins(companyId);
+
+            var existingAppointments = allAppointments
+                .Where(a => a.Start.Date == selectedDate.Date &&
+                            a.Start.TimeOfDay >= openingHours &&
+                            a.Start.TimeOfDay < closingHours)
+                .ToList();
+
+            if (existingAppointments.IsNullOrEmpty())
+            {
+                recommendedAppointments = GenerateAppointmentsForAllDay(selectedDate, company, administrators);
+            }
+            else
+            {
+                DateTime currentTime = selectedDate.Date.Add(openingHours);
+                DateTime endTime = selectedDate.Date.Add(closingHours);
+
+                while (currentTime.AddMinutes(existingAppointments.First().Duration) <= endTime)
+                {
+                    User availableAdmin = FindAvailableAdministrator(administrators, existingAppointments, currentTime);
+                    if (availableAdmin != null)
+                    {
+                        var recommendedAppointment = new Appointment
+                        {
+                            Start = currentTime,
+                            AdminName = availableAdmin.Name,
+                            AdminSurname = availableAdmin.Surname,
+                            CustomerName = "",
+                            CustomerSurname = "",
+                            CompanyId = companyId,
+                        };
+
+                        recommendedAppointments.Add(recommendedAppointment);
+                    }
+
+                    currentTime = currentTime.AddMinutes(existingAppointments.First().Duration);
+                }
             }
 
             return recommendedAppointments;

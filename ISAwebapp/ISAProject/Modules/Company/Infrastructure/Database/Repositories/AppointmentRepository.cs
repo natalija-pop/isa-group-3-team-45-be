@@ -38,6 +38,11 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
             return _context.Appointments.ToList();
         }
 
+        public List<Equipment> GetWithIds(List<int> desiredEquipmentIds)
+        {
+            return _context.Equipments.Where(e => desiredEquipmentIds.Contains((int)e.Id)).ToList();
+        }
+
         public Appointment Update(Appointment appointment)
         {
             try
