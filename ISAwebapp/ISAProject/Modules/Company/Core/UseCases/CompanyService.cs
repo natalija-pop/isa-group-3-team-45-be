@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
 using FluentResults;
 using ISAProject.Configuration.Core.UseCases;
+using ISAProject.Modules.Company.API.Converters;
 using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
-using ISAProject.Modules.Stakeholders.API.Converters;
-using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
 
 namespace ISAProject.Modules.Company.Core.UseCases
 {
     public class CompanyService: CrudService<CompanyDto, Domain.Company>, ICompanyService
     {
-        private readonly IUserRepository _userRepository;
-        public CompanyService(ICrudRepository<Domain.Company> crudRepository, IMapper mapper, IUserRepository userRepository) : base(crudRepository, mapper)
+        private readonly ICompanyAdminRepo _userRepository;
+        public CompanyService(ICrudRepository<Domain.Company> crudRepository, IMapper mapper, ICompanyAdminRepo userRepository) : base(crudRepository, mapper)
         {
             _userRepository = userRepository;
         }
@@ -20,11 +19,8 @@ namespace ISAProject.Modules.Company.Core.UseCases
         public Result<CompanyDto> CreateCompany(CompanyDto companyDto)
         {
             var company = CrudRepository.Create(MapToDomain(companyDto));
-            var adminDto = companyDto.Admins.FirstOrDefault();
-            var admin = _userRepository.Create(
-                UserConverter.ConvertToDomain(adminDto));
-
-            var companyAdmin = _userRepository.Create(new CompanyAdmin(company.Id, admin.Id));
+            var user = _userRepository.Create(
+                company.Admins.FirstOrDefault(), company.Id);
             return MapToDto(company);
         }
 
@@ -50,6 +46,22 @@ namespace ISAProject.Modules.Company.Core.UseCases
                 }
             }
 
+            return searchResults;
+        }
+
+        public Result<List<EquipmentDto>> SearchCompanyEquipment(int companyId, string name)
+        {
+            var searchResults = new List<EquipmentDto>();
+            var company = CrudRepository.Get(companyId);
+            var companyEquipment = company.Equipment;
+
+            foreach (var equipment in companyEquipment)
+            {
+                if (name != null && equipment.Name.ToLower().Contains(name?.ToLower()))
+                {
+                    searchResults.Add(EquipmentConverter.ToDto(equipment));
+                }
+            }
             return searchResults;
         }
     }

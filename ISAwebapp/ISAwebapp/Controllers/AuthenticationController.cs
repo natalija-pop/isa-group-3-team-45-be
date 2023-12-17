@@ -1,7 +1,6 @@
 ﻿using ISAProject.Modules.Stakeholders.API.Dtos;
 using ISAProject.Modules.Stakeholders.API.Public;
-using ISAProject.Modules.Stakeholders.Core.Domain;
-using ISAProject.Modules.Stakeholders.Core.UseCases;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -19,10 +18,19 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult<AuthenticationTokensDto> RegisterTourist([FromBody] UserRegistrationDto account)
+        public ActionResult<AuthenticationTokensDto> Register([FromBody] UserRegistrationDto account)
         {
             var result = _authenticationService.RegisterUser(account);
             _emailService.SendActivationEmail(account.Email, result.Value.AccessToken);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Policy = "SystemAdministratorPolicy")]
+        [HttpPost("registerSysAdmin")]
+        public ActionResult<AuthenticationTokensDto> RegisterSysAdmin([FromBody] SysAdminRegistrationDto account)
+        {
+            var result = _authenticationService.RegisterSysAdmin(account);
+            _emailService.SendRegistrationInfoEmail(account.Email, result.Value.Password);
             return CreateResponse(result);
         }
 

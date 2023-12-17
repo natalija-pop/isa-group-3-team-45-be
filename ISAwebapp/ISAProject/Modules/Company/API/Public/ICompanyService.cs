@@ -13,5 +13,6 @@ namespace ISAProject.Modules.Company.API.Public
         Result<PagedResult<CompanyDto>> GetPaged(int page, int pageSize);
         Result<CompanyDto> CreateCompany(CompanyDto companyDto);
         Result<List<CompanyDto>> Search(string name, string city);
+        Result<List<EquipmentDto>> SearchCompanyEquipment(int companyId, string name);
     }
 }
