@@ -58,5 +58,10 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
             if (company == null) throw new KeyNotFoundException("Company not found.");
             return company;
         }
+
+        public List<Appointment> GetCompanyAppointments(long companyId)
+        {
+            return GetAll().FindAll(x => x.CompanyId == companyId && x.Scheduled == false);
+        }
     }
 }
