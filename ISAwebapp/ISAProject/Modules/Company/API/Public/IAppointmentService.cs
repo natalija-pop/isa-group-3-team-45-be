@@ -15,6 +15,7 @@ namespace ISAProject.Modules.Company.API.Public
         Result<AppointmentDto> Create(AppointmentDto appointmentDto);
         Result<AppointmentDto> Get(int id);
         Result<AppointmentDto> Update(AppointmentDto appointmentDto);
+        Result<AppointmentDto> ReserveAppointment(AppointmentDto appointmentDto);
         Result<List<AppointmentDto>> GetAll();
         Result<List<Appointment>> GenerateRecommendedAppointments(DateTime selectedDate, int companyId);
         Result<List<AppointmentDto>> GetCompanyAppointments(int companyId);

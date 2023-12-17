@@ -4,6 +4,8 @@ using System.Text;
 using ISAProject.Modules.Stakeholders.API.Public;
 using ISAProject.Modules.Company.Core.Domain;
 using QRCoder;
+using IronBarCode;
+using ISAProject.Modules.Company.API.Dtos;
 
 namespace ISAProject.Modules.Stakeholders.Core.UseCases
 {
@@ -64,6 +66,54 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
                 mail.Subject = emailSubject;
                 mail.Body = emailBody;
                 mail.IsBodyHtml = true;
+
+                using (SmtpClient smtp = new SmtpClient(_smtpServer, _port))
+                {
+                    smtp.Credentials = new NetworkCredential(_email, _password);
+                    smtp.EnableSsl = true;
+                    try
+                    {
+                        smtp.Send(mail);
+                        Console.WriteLine("Email successfully sent!");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+        }
+
+        public void SendAppointmentConfirmation(AppointmentDto appointment, string recipientEmail)
+        {
+            string appointmentDetails = $"Start: {appointment.Start}\n";
+            appointmentDetails += $"Equipment:\n";
+            foreach (var equipment in appointment.Equipment)
+            {
+                appointmentDetails += $"{equipment.Name}\n";
+            }
+            appointmentDetails += $"Admin: {appointment.AdminName} {appointment.AdminSurname}\n";
+            appointmentDetails += $"Customer: {appointment.CustomerName} {appointment.CustomerSurname}\n";
+
+            GeneratedBarcode qrcode = IronBarCode.BarcodeWriter.CreateBarcode(appointmentDetails, BarcodeEncoding.QRCode);
+            qrcode.SaveAsPng("reservation.png");
+
+            SendEmailWithAttachment(recipientEmail, "Reservation confirmation", "Reservation details are in attachment", "reservation.png");
+
+        }
+
+        private void SendEmailWithAttachment(string recipientEmail, string emailSubject, string emailBody, string attachmentPath)
+        {
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress(_email);
+                mail.To.Add(recipientEmail);
+                mail.Subject = emailSubject;
+                mail.Body = emailBody;
+                mail.IsBodyHtml = true;
+
+                Attachment attachment = new Attachment(attachmentPath, "image/png");
+                mail.Attachments.Add(attachment);
 
                 using (SmtpClient smtp = new SmtpClient(_smtpServer, _port))
                 {

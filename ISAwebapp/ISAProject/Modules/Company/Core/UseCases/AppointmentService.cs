@@ -39,6 +39,10 @@ namespace ISAProject.Modules.Company.Core.UseCases
             var existingEquipment = _repository.GetWithIds(equipmentIds);
             var appointment = MapToDomain(appointmentDto);
             appointment.Equipment = existingEquipment;
+            foreach (var eq in appointment.Equipment)
+            {
+                eq.ReservedQuantity += 1;
+            }
             return MapToDto(_repository.Create(appointment));
         }
 
@@ -52,6 +56,28 @@ namespace ISAProject.Modules.Company.Core.UseCases
         {
             try
             {
+                var result = _repository.Update(MapToDomain(appointmentDto));
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+
+        }
+
+        public Result<AppointmentDto> ReserveAppointment(AppointmentDto appointmentDto)
+        {
+            try
+            {
+                foreach (var eq in appointmentDto.Equipment)
+                {
+                    eq.ReservedQuantity += 1;
+                }
                 var result = _repository.Update(MapToDomain(appointmentDto));
                 return MapToDto(result);
             }
