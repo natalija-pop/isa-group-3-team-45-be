@@ -11,9 +11,10 @@ namespace ISAProject.Modules.Company.Core.Domain
         {
             get => _duration;
         }
-
-        public string AdminName { get;  set; }
-        public string AdminSurname { get;  set; }
+        public long AdminId { get; init; }
+        public string AdminName { get;  init; }
+        public string AdminSurname { get;  init; }
+        public long? CustomerId { get; set; }
         public string? CustomerName { get; set; } = null;
         public string? CustomerSurname { get; set; } = null;
         public long CompanyId { get; init; }
@@ -22,11 +23,13 @@ namespace ISAProject.Modules.Company.Core.Domain
 
         public Appointment()
         {
-            
         }
-        public Appointment(DateTime start, string adminName, string adminSurname, string? customerName, string? customerSurname, int companyId)
+
+        public Appointment(DateTime start, string adminName, string adminSurname, string? customerName, string? customerSurname, long companyId, long adminId, long? customerId)
         {
             Start = start;
+            AdminId = adminId;
+            CustomerId = customerId;
             AdminName = adminName;
             AdminSurname = adminSurname;
             CustomerName = customerName;

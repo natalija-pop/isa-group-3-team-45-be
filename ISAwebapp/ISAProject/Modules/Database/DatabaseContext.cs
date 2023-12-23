@@ -6,7 +6,6 @@ namespace ISAProject.Modules.Database
 {
     public class DatabaseContext: DbContext
     {
-
         public DbSet<Company.Core.Domain.Company> Companies { get; set; }
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
@@ -57,7 +56,6 @@ namespace ISAProject.Modules.Database
             modelBuilder.Entity<Appointment>()
                 .HasMany(e => e.Equipment)
                 .WithMany();
-
 
             modelBuilder.Entity<Equipment>().ToTable("Equipments");
         }

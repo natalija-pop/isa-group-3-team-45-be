@@ -9,6 +9,7 @@ using ISAProject.Modules.Company.Core.Domain;
 using ISAProject.Modules.Company.Infrastructure.Database;
 using ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces;
 using ISAProject.Modules.Company.Infrastructure.Database.Repositories;
+using ISAProject.Modules.Database;
 
 namespace ISAProject.Modules.Company.Infrastructure
 {
@@ -35,8 +36,8 @@ namespace ISAProject.Modules.Company.Infrastructure
             services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudRepository<Equipment, CompanyContext>));
             services.AddScoped(typeof(IAppointmentRepository), typeof(AppointmentRepository));
 
-            services.AddDbContext<CompanyContext>(opt =>
-                opt.UseNpgsql(DatabaseConnectionBuilder.Build("companies")));
+            services.AddDbContext<DatabaseContext>(opt =>
+                opt.UseNpgsql(DatabaseConnectionBuilder.Build("isa")));
         }
     }
 }
