@@ -25,7 +25,7 @@ namespace API.Controllers.Stakeholders
         [HttpPost("createCompanyAdmin/{companyId:int}")]
         public ActionResult<UserDto> CreateNewCompanyAdmin([FromBody] UserDto userDto, [FromRoute] int companyId)
         {
-            return CreateResponse(_userService.AddNewCompanyAdmin(userDto, companyId));
+            throw new NotImplementedException();
         }
 
         [HttpGet("getAll")]
@@ -37,7 +37,7 @@ namespace API.Controllers.Stakeholders
         [HttpGet("getCompanyAdmins/{companyId:int}")]
         public ActionResult<UserDto> GetCompanyAdmins([FromRoute] int companyId)
         {
-            return CreateResponse(_userService.GetCompanyAdmins(companyId));
+            throw new NotImplementedException();
         }
 
 

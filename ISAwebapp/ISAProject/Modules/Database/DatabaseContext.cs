@@ -11,7 +11,7 @@ namespace ISAProject.Modules.Database
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<CompanyAdmin> CompanyAdmins { get; set; }
-
+        public DbSet<Employee> Employees { get; set; }
 
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
@@ -32,6 +32,7 @@ namespace ISAProject.Modules.Database
 
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<CompanyAdmin>().ToTable("CompanyAdmins");
+            modelBuilder.Entity<Employee>().ToTable("Employees");
 
             modelBuilder.Entity<Company.Core.Domain.Company>().ToTable("Companies");
             modelBuilder.Entity<Company.Core.Domain.Company>()

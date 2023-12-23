@@ -19,11 +19,6 @@ namespace ISAProject.Modules.Stakeholders.API.Converters
                 Password = user.Password,
                 Name = user.Name,
                 Surname = user.Surname,
-                City = user.City,
-                Country = user.Country,
-                Phone = user.Phone,
-                Profession = user.Profession,
-                CompanyInformation = user.CompanyInformation,
                 Role = user.Role,
                 IsActivated = user.IsActivated
             };
@@ -41,11 +36,6 @@ namespace ISAProject.Modules.Stakeholders.API.Converters
                 userDto.Password,
                 userDto.Name,
                 userDto.Surname,
-                userDto.City,
-                userDto.Country,
-                userDto.Phone,
-                userDto.Profession,
-                userDto.CompanyInformation,
                 userDto.Role,
                 userDto.IsActivated
             );

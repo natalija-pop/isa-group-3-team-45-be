@@ -10,17 +10,18 @@ namespace ISAProject.Modules.Company.Core.UseCases
 {
     public class CompanyService: CrudService<CompanyDto, Domain.Company>, ICompanyService
     {
-        private readonly ICompanyAdminRepo _userRepository;
+        private readonly ICompanyAdminRepo _companyAdminsRepository;
         public CompanyService(ICrudRepository<Domain.Company> crudRepository, IMapper mapper, ICompanyAdminRepo userRepository) : base(crudRepository, mapper)
         {
-            _userRepository = userRepository;
+            _companyAdminsRepository = userRepository;
         }
 
         public Result<CompanyDto> CreateCompany(CompanyDto companyDto)
         {
             var company = CrudRepository.Create(MapToDomain(companyDto));
-            var user = _userRepository.Create(
-                company.Admins.FirstOrDefault(), company.Id);
+            var admin = company.Admins.FirstOrDefault() ?? throw new NullReferenceException("Company needs one Administrator");
+            admin.CompanyId = company.Id;
+            _companyAdminsRepository.Create(admin);
             return MapToDto(company);
         }
 

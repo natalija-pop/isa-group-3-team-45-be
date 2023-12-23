@@ -18,7 +18,7 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult<AuthenticationTokensDto> Register([FromBody] UserRegistrationDto account)
+        public ActionResult<AuthenticationTokensDto> Register([FromBody] EmployeeRegistrationDto account)
         {
             var result = _authenticationService.RegisterUser(account);
             _emailService.SendActivationEmail(account.Email, result.Value.AccessToken);

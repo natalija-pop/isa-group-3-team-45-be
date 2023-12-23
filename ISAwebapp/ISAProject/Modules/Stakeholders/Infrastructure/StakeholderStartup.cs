@@ -38,6 +38,7 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure
             services.AddScoped(typeof(IUserRepository), typeof(UserDatabaseRepository));
             services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudRepository<User, StakeholdersContext>));
             services.AddScoped(typeof(ICompanyAdminRepo), typeof(CompanyAdminRepository));
+            services.AddScoped(typeof(IEmployeeRepository), typeof(EmployeeRepository));
 
             services.AddDbContext<DatabaseContext>(opt =>
                 opt.UseNpgsql(DatabaseConnectionBuilder.Build("isa"),

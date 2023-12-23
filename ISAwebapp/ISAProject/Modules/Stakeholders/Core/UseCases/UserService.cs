@@ -11,12 +11,10 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
     public class UserService : CrudService<UserDto, User>, IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly ICompanyAdminRepo _companyAdminRepository;
 
-        public UserService(ICrudRepository<User> repository, IMapper mapper, IUserRepository userRepository, ICompanyAdminRepo companyAdminRepository) : base(repository, mapper)
+        public UserService(ICrudRepository<User> repository, IMapper mapper, IUserRepository userRepository) : base(repository, mapper)
         {
             _userRepository = userRepository;
-            _companyAdminRepository = companyAdminRepository;
         }
 
         public User Create(User user)
@@ -33,20 +31,6 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
         {
             return _userRepository.GetActiveUserByEmail(email);
         }
-
-        public Result<UserDto> AddNewCompanyAdmin(UserDto userDto, long companyId)
-        {
-            var user = MapToDomain(userDto);
-            _companyAdminRepository.Create(user, companyId);
-            return MapToDto(user);
-        }
-
-        public Result<List<UserDto>> GetCompanyAdmins(long companyId)
-        {
-            var users = _companyAdminRepository.GetCompanyAdmins(companyId);
-            return MapToDto(users);
-        }
-
         public Result<bool> ChangePassword(PasswordChangeDto passwordChange)
         {
             var user = _userRepository.GetActiveUserByEmail(passwordChange.Email);
