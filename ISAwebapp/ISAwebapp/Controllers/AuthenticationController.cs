@@ -27,7 +27,7 @@ namespace API.Controllers
 
         [Authorize(Policy = "SystemAdministratorPolicy")]
         [HttpPost("registerSysAdmin")]
-        public ActionResult<AuthenticationTokensDto> RegisterSysAdmin([FromBody] SysAdminRegistrationDto account)
+        public ActionResult<AuthenticationTokensDto> RegisterSysAdmin([FromBody] AccountRegistrationDto account)
         {
             var result = _authenticationService.RegisterSysAdmin(account);
             _emailService.SendRegistrationInfoEmail(account.Email, result.Value.Password);

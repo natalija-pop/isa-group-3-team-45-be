@@ -43,7 +43,8 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
 
             try
             {
-                var user = _employeeRepository.Create(new Employee(account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation));
+                var user = _employeeRepository.Create(new Employee(account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation, account.Email, 
+                    account.Password, account.Name, account.Surname, UserRole.Employee, false));
                 return _tokenGenerator.GenerateAccessToken(user);
             }
             catch (ArgumentException e)
@@ -52,7 +53,7 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             }
         }
 
-        public Result<CredentialsDto> RegisterSysAdmin(SysAdminRegistrationDto account)
+        public Result<CredentialsDto> RegisterSysAdmin(AccountRegistrationDto account)
         {
             if (_userRepository.Exists(account.Email)) return Result.Fail(FailureCode.NonUniqueUsername);
             try

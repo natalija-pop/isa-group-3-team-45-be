@@ -1,6 +1,5 @@
 ﻿using ISAProject.Modules.Stakeholders.Core.Mappers;
 using ISAProject.Modules.Stakeholders.Core.UseCases;
-using ISAProject.Modules.Stakeholders.Infrastructure.Database;
 using ISAProject.Modules.Stakeholders.Infrastructure.Security;
 using Microsoft.Extensions.DependencyInjection;
 using ISAProject.Configuration.Infrastructure.Database;
@@ -36,7 +35,7 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure
         private static void SetupInfrastructure(IServiceCollection services)
         {
             services.AddScoped(typeof(IUserRepository), typeof(UserDatabaseRepository));
-            services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudRepository<User, StakeholdersContext>));
+            services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudRepository<User, DatabaseContext>));
             services.AddScoped(typeof(ICompanyAdminRepo), typeof(CompanyAdminRepository));
             services.AddScoped(typeof(IEmployeeRepository), typeof(EmployeeRepository));
 

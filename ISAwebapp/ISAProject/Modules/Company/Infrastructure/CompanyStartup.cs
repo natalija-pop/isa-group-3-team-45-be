@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ISAProject.Configuration.Infrastructure.Database;
 using ISAProject.Modules.Company.Core.Domain;
-using ISAProject.Modules.Company.Infrastructure.Database;
 using ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces;
 using ISAProject.Modules.Company.Infrastructure.Database.Repositories;
 using ISAProject.Modules.Database;
@@ -32,8 +31,8 @@ namespace ISAProject.Modules.Company.Infrastructure
 
         private static void SetupCore(IServiceCollection services)
         {
-            services.AddScoped(typeof(ICrudRepository<Core.Domain.Company>), typeof(CrudRepository<Core.Domain.Company, CompanyContext>));
-            services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudRepository<Equipment, CompanyContext>));
+            services.AddScoped(typeof(ICrudRepository<Core.Domain.Company>), typeof(CrudRepository<Core.Domain.Company, DatabaseContext>));
+            services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudRepository<Equipment, DatabaseContext>));
             services.AddScoped(typeof(IAppointmentRepository), typeof(AppointmentRepository));
 
             services.AddDbContext<DatabaseContext>(opt =>

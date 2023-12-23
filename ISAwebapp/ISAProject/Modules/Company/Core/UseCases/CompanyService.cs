@@ -19,9 +19,6 @@ namespace ISAProject.Modules.Company.Core.UseCases
         public Result<CompanyDto> CreateCompany(CompanyDto companyDto)
         {
             var company = CrudRepository.Create(MapToDomain(companyDto));
-            var admin = company.Admins.FirstOrDefault() ?? throw new NullReferenceException("Company needs one Administrator");
-            admin.CompanyId = company.Id;
-            _companyAdminsRepository.Create(admin);
             return MapToDto(company);
         }
 
