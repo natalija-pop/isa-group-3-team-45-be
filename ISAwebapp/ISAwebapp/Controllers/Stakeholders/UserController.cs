@@ -22,24 +22,11 @@ namespace API.Controllers.Stakeholders
             return CreateResponse(result);
         }
 
-        [HttpPost("createCompanyAdmin/{companyId:int}")]
-        public ActionResult<UserDto> CreateNewCompanyAdmin([FromBody] UserDto userDto, [FromRoute] int companyId)
-        {
-            throw new NotImplementedException();
-        }
-
         [HttpGet("getAll")]
         public ActionResult<UserDto> GetPaged([FromQuery] int page, [FromQuery] int pageSize)
         {
             return CreateResponse(_userService.GetPaged(page, pageSize));
         }
-
-        [HttpGet("getCompanyAdmins/{companyId:int}")]
-        public ActionResult<UserDto> GetCompanyAdmins([FromRoute] int companyId)
-        {
-            throw new NotImplementedException();
-        }
-
 
         [HttpGet("get/{userId:int}")]
         public ActionResult<UserDto> Get([FromRoute] int userId)

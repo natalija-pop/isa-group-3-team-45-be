@@ -25,8 +25,14 @@ namespace API.Controllers
             return CreateResponse(result);
         }
 
+        [HttpPost("register-company-admin")]
+        public ActionResult<AuthenticationTokensDto> RegisterCompanyAdmin([FromBody] CompanyAdminDto account)
+        {
+            return CreateResponse(_authenticationService.RegisterCompanyAdmin(account));
+        }
+
         [Authorize(Policy = "SystemAdministratorPolicy")]
-        [HttpPost("registerSysAdmin")]
+        [HttpPost("register-sys-admin")]
         public ActionResult<AuthenticationTokensDto> RegisterSysAdmin([FromBody] AccountRegistrationDto account)
         {
             var result = _authenticationService.RegisterSysAdmin(account);

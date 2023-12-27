@@ -8,6 +8,7 @@ namespace ISAProject.Modules.Stakeholders.API.Public
         Result<AuthenticationTokensDto> Login(CredentialsDto credentials);
         Result<AuthenticationTokensDto> RegisterUser(EmployeeRegistrationDto account);
         Result<CredentialsDto> RegisterSysAdmin(AccountRegistrationDto account);
+        Result<CompanyAdminDto> RegisterCompanyAdmin(CompanyAdminDto account);
 
     }
 }

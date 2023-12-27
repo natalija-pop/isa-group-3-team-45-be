@@ -4,6 +4,8 @@ using ISAProject.Configuration.Core.UseCases;
 using ISAProject.Modules.Company.API.Converters;
 using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
+using ISAProject.Modules.Stakeholders.API.Converters;
+using ISAProject.Modules.Stakeholders.API.Dtos;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
 
 namespace ISAProject.Modules.Company.Core.UseCases
@@ -61,6 +63,12 @@ namespace ISAProject.Modules.Company.Core.UseCases
                 }
             }
             return searchResults;
+        }
+        public Result<List<CompanyAdminDto>> GetCompanyAdmins(int companyId)
+        {
+            var admins = _companyAdminsRepository.GetCompanyAdmins(companyId);
+            if (admins.Count < 0) return Result.Fail(FailureCode.NotFound);
+            return CompanyAdminConverter.ConvertToDto(admins);
         }
     }
 }
