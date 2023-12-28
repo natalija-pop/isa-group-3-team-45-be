@@ -30,6 +30,7 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure
             services.AddScoped<IPasswordGenerator, GuidPasswordGenerator>();
             services.AddScoped<IEmailService,  EmailService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
         }
 
         private static void SetupInfrastructure(IServiceCollection services)
