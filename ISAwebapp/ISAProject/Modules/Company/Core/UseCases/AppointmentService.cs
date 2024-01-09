@@ -5,13 +5,9 @@ using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Company.Core.Domain;
 using ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces;
-using ISAProject.Modules.Company.Infrastructure.Database.Repositories;
 using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Microsoft.IdentityModel.Tokens;
-using System.ComponentModel.Design;
-
-
 namespace ISAProject.Modules.Company.Core.UseCases
 {
     public class AppointmentService: MappingService<AppointmentDto, Appointment>, IAppointmentService
@@ -103,7 +99,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return company;
         }
 
-        private List<Appointment> GenerateAppointmentsForAllDay(DateTime selectedDate, Core.Domain.Company company, List<User> administrators)
+        private List<Appointment> GenerateAppointmentsForAllDay(DateTime selectedDate, Core.Domain.Company company, List<CompanyAdmin> administrators)
         {
             DateTime currentTime = selectedDate.Date.Add(company.WorkingHours.OpeningHours);
             DateTime endTime = selectedDate.Date.Add(company.WorkingHours.ClosingHours);
@@ -186,7 +182,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return recommendedAppointments;
         }
 
-        private User FindAvailableAdministrator(List <User> administrators, List<AppointmentDto> existingAppointments, DateTime currentTime)
+        private User FindAvailableAdministrator(List <CompanyAdmin> administrators, List<AppointmentDto> existingAppointments, DateTime currentTime)
         {
             foreach (var admin in administrators)
             {

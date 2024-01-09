@@ -1,6 +1,5 @@
 ﻿using ISAProject.Modules.Stakeholders.Core.Mappers;
 using ISAProject.Modules.Stakeholders.Core.UseCases;
-using ISAProject.Modules.Stakeholders.Infrastructure.Database;
 using ISAProject.Modules.Stakeholders.Infrastructure.Security;
 using Microsoft.Extensions.DependencyInjection;
 using ISAProject.Configuration.Infrastructure.Database;
@@ -9,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
 using ISAProject.Configuration.Core.UseCases;
+using ISAProject.Modules.Database;
 using ISAProject.Modules.Stakeholders.Core.Domain;
 
 namespace ISAProject.Modules.Stakeholders.Infrastructure
@@ -30,17 +30,19 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure
             services.AddScoped<IPasswordGenerator, GuidPasswordGenerator>();
             services.AddScoped<IEmailService,  EmailService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
         }
 
         private static void SetupInfrastructure(IServiceCollection services)
         {
             services.AddScoped(typeof(IUserRepository), typeof(UserDatabaseRepository));
-            services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudRepository<User, StakeholdersContext>));
+            services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudRepository<User, DatabaseContext>));
             services.AddScoped(typeof(ICompanyAdminRepo), typeof(CompanyAdminRepository));
+            services.AddScoped(typeof(IEmployeeRepository), typeof(EmployeeRepository));
 
-            services.AddDbContext<StakeholdersContext>(opt =>
-                opt.UseNpgsql(DatabaseConnectionBuilder.Build("stakeholders"),
-                    x => x.MigrationsHistoryTable("__EFMigrationsHistory", "stakeholders")));
+            services.AddDbContext<DatabaseContext>(opt =>
+                opt.UseNpgsql(DatabaseConnectionBuilder.Build("isa"),
+                    x => x.MigrationsHistoryTable("__EFMigrationsHistory", "isa")));
         }
     }
 }

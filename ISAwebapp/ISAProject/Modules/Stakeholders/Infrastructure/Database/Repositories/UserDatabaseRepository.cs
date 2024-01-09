@@ -1,13 +1,14 @@
-﻿using ISAProject.Modules.Stakeholders.Core.Domain;
+﻿using ISAProject.Modules.Database;
+using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
 
 namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
 {
     public class UserDatabaseRepository : IUserRepository
     {
-        private readonly StakeholdersContext _dbContext;
+        private readonly DatabaseContext _dbContext;
 
-        public UserDatabaseRepository(StakeholdersContext dbContext)
+        public UserDatabaseRepository(DatabaseContext dbContext)
         {
             _dbContext = dbContext;
         }

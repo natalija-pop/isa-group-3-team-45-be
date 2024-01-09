@@ -1,9 +1,7 @@
 ﻿namespace ISAProject.Modules.Stakeholders.API.Dtos
 {
-    public class CompanyAdminDto
+    public class CompanyAdminDto: UserDto
     {
-        public long Id { get; set; }
         public int CompanyId { get; set; }
-        public int UserId { get; set; }
     }
 }

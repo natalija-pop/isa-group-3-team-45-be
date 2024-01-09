@@ -1,5 +1,6 @@
 ﻿using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
+using ISAProject.Modules.Stakeholders.API.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Company
@@ -55,6 +56,12 @@ namespace API.Controllers.Company
         public ActionResult<EquipmentDto> GetCompanyEquipmentSearchResults([FromRoute] int companyId, [FromQuery] string? searchKeyword)
         {
             return CreateResponse(_companyService.SearchCompanyEquipment(companyId, searchKeyword));
+        }
+
+        [HttpGet("get-company-admins/{companyId:int}")]
+        public ActionResult<CompanyAdminDto> GetCompanyAdmins([FromRoute] int companyId)
+        {
+            return CreateResponse(_companyService.GetCompanyAdmins(companyId));
         }
 
     }

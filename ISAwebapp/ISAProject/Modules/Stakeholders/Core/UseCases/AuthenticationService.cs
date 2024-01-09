@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using ISAProject.Configuration.Core.UseCases;
+using ISAProject.Modules.Stakeholders.API.Converters;
 using ISAProject.Modules.Stakeholders.API.Dtos;
 using ISAProject.Modules.Stakeholders.API.Public;
 using ISAProject.Modules.Stakeholders.Core.Domain;
@@ -11,13 +12,17 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
     {
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IUserRepository _userRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly ICompanyAdminRepo _companyAdminRepository;
         private readonly IPasswordGenerator _passwordGenerator;
 
-        public AuthenticationService(ITokenGenerator tokenGenerator, IUserRepository userRepository, IPasswordGenerator passwordGenerator)
+        public AuthenticationService(ITokenGenerator tokenGenerator, IUserRepository userRepository, IPasswordGenerator passwordGenerator, IEmployeeRepository employeeRepository, ICompanyAdminRepo companyAdminRepository)
         {
             _tokenGenerator = tokenGenerator;
             _userRepository = userRepository;
             _passwordGenerator = passwordGenerator;
+            _employeeRepository = employeeRepository;
+            _companyAdminRepository = companyAdminRepository;
         }
 
         public Result<AuthenticationTokensDto> Login(CredentialsDto credentials)
@@ -35,13 +40,14 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             return _tokenGenerator.GenerateAccessToken(user);
         }
 
-        public Result<AuthenticationTokensDto> RegisterUser(UserRegistrationDto account)
+        public Result<AuthenticationTokensDto> RegisterUser(EmployeeRegistrationDto account)
         {
             if (_userRepository.Exists(account.Email)) return Result.Fail(FailureCode.NonUniqueUsername);
 
             try
             {
-                var user = _userRepository.Create(new User(account.Email, account.Password, account.Name, account.Surname, account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation, account.Role, account.IsActivated));
+                var user = _employeeRepository.Create(new Employee(account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation, account.Email, 
+                    account.Password, account.Name, account.Surname, UserRole.Employee, false));
                 return _tokenGenerator.GenerateAccessToken(user);
             }
             catch (ArgumentException e)
@@ -50,18 +56,31 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             }
         }
 
-        public Result<CredentialsDto> RegisterSysAdmin(SysAdminRegistrationDto account)
+        public Result<CredentialsDto> RegisterSysAdmin(AccountRegistrationDto account)
         {
             if (_userRepository.Exists(account.Email)) return Result.Fail(FailureCode.NonUniqueUsername);
             try
             {
                 var password = _passwordGenerator.GeneratePassword();
-                _userRepository.Create(new User(account.Email, password, account.Name, account.Surname, account.City, account.Country, account.Phone, account.Profession, account.CompanyInformation, UserRole.SystemAdministrator, true));
+                _userRepository.Create(new User(account.Email, password, account.Name, account.Surname, UserRole.SystemAdministrator, true));
                 return new CredentialsDto
                 {
                     Email = account.Email,
                     Password = password
                 };
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+        public Result<CompanyAdminDto> RegisterCompanyAdmin(CompanyAdminDto account)
+        {
+            if (_userRepository.Exists(account.Email)) return Result.Fail(FailureCode.NonUniqueUsername);
+            try
+            {
+                var admin = _companyAdminRepository.Create(new CompanyAdmin(account.CompanyId, account.Email, account.Password, account.Name, account.Surname, UserRole.CompanyAdministrator, true));
+                return CompanyAdminConverter.ConvertToDto(admin);
             }
             catch (ArgumentException e)
             {

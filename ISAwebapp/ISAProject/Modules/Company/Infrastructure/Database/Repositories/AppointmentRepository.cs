@@ -1,22 +1,16 @@
 ﻿using ISAProject.Modules.Company.Core.Domain;
 using ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces;
+using ISAProject.Modules.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
 {
     public class AppointmentRepository : IAppointmentRepository
     {
-        private readonly CompanyContext _context;
+        private readonly DatabaseContext _context;
 
-        public AppointmentRepository(CompanyContext companyContext)
+        public AppointmentRepository(DatabaseContext context)
         {
-            _context = companyContext;
+            _context = context;
         }
 
         public Appointment Create(Appointment appointment)

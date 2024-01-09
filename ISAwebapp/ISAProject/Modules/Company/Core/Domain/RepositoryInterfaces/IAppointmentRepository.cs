@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
+﻿namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
 {
     public interface IAppointmentRepository
     {
@@ -15,6 +9,5 @@ namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
         Company GetAppointmentsCompany(long companyId);
         List<Appointment> GetCompanyAppointments(long companyId);
         List<Equipment> GetWithIds(List<int> desiredEquipmentIds);
-
     }
 }

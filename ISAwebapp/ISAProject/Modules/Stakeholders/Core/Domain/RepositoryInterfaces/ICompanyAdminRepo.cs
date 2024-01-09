@@ -2,8 +2,8 @@
 {
     public interface ICompanyAdminRepo
     {
-        User Create(User user, long companyId);
-        List<User> GetCompanyAdmins(long companyId);
+        CompanyAdmin Create(CompanyAdmin companyAdmin);
+        List<CompanyAdmin> GetCompanyAdmins(long companyId);
         
     }
 }
