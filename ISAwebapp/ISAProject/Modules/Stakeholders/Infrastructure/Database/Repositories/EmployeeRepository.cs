@@ -1,7 +1,6 @@
 ﻿using ISAProject.Modules.Database;
 using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
 {
@@ -25,6 +24,20 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
         {
             var employee = _dbContext.Employees.Find(employeeId);
             if (employee == null) throw new KeyNotFoundException("Not found: " + employeeId);
+            return employee;
+        }
+
+        public Employee Update(Employee employee)
+        {
+            try
+            {
+                _dbContext.Employees.Update(employee);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new KeyNotFoundException(e.Message);
+            }
             return employee;
         }
     }

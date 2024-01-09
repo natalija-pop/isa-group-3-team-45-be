@@ -23,7 +23,8 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
 
         public Result<EmployeeRegistrationDto> Update(EmployeeRegistrationDto employee)
         {
-            throw new NotImplementedException();
+            var entity = _employeeRepository.Update(MapToDomain(employee));
+            return MapToDto(entity);
         }
     }
 }
