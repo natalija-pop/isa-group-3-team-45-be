@@ -39,5 +39,22 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             CrudRepository.Update(user);
             return true;
         }
+
+        public async Task ClearPenaltyPointsForAllUsers()
+        {
+            DateTime currentDate = DateTime.Now;
+
+            if (currentDate.Day == 1)
+            {
+                var users = _userRepository.GetAll();
+
+                foreach (var user in users)
+                {
+                    user.PenaltyPoints = 0;
+                    CrudRepository.Update(user);
+                }
+            }
+        }
+
     }
 }

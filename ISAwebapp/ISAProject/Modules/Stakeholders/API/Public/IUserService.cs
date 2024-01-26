@@ -12,5 +12,6 @@ namespace ISAProject.Modules.Stakeholders.API.Public
         Result Delete(int id);
         Result<PagedResult<UserDto>> GetPaged(int page, int pageSize);
         Result<bool> ChangePassword(PasswordChangeDto passwordChange);
+        Task ClearPenaltyPointsForAllUsers();
     }
 }

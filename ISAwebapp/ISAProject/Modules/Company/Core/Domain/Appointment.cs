@@ -18,7 +18,7 @@ namespace ISAProject.Modules.Company.Core.Domain
         public string? CustomerName { get; set; } = null;
         public string? CustomerSurname { get; set; } = null;
         public long CompanyId { get; init; }
-        public bool Scheduled { get; set; }
+        public AppointmentStatus Status { get; set; }
         public virtual ICollection<Equipment> Equipment { get; set; }
 
         public Appointment()
@@ -35,7 +35,15 @@ namespace ISAProject.Modules.Company.Core.Domain
             CustomerName = customerName;
             CustomerSurname = customerSurname;
             CompanyId = companyId;
-            Scheduled = false;
+            Status = AppointmentStatus.Predefined;
+        }
+
+        public enum AppointmentStatus
+        {
+            Predefined,
+            Scheduled,
+            Canceled,
+            Processed
         }
     }
 }

@@ -19,9 +19,13 @@ namespace ISAProject.Modules.Company.API.Public
         Result<List<AppointmentDto>> GetAll();
         Result<List<Appointment>> GenerateRecommendedAppointments(DateTime selectedDate, int companyId);
         Result<List<AppointmentDto>> GetCompanyAppointments(int companyId);
+        Result<List<AppointmentDto>> GetCustomerAppointments(int customerId);
+
         public bool IsAppointmentValid(DateTime selectedDate, int companyId, string adminName, string adminSurname);
         public bool IsEquipmentReserved(int equipmentId);
+
         Result<AppointmentDto> CreateNewAppointment(AppointmentDto appointmentDto);
 
+        List<string> RetrieveBarcodeImageData(string userId);
     }
 }

@@ -95,10 +95,27 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             appointmentDetails += $"Admin: {appointment.AdminName} {appointment.AdminSurname}\n";
             appointmentDetails += $"Customer: {appointment.CustomerName} {appointment.CustomerSurname}\n";
 
-            GeneratedBarcode qrcode = IronBarCode.BarcodeWriter.CreateBarcode(appointmentDetails, BarcodeEncoding.QRCode);
-            qrcode.SaveAsPng("reservation.png");
+            string barcodeFolderPath = "BarCodes";
 
-            SendEmailWithAttachment(recipientEmail, "Reservation confirmation", "Reservation details are in attachment", "reservation.png");
+            try
+            {
+                if (!Directory.Exists(barcodeFolderPath))
+                {
+                    Directory.CreateDirectory(barcodeFolderPath);
+                }
+
+                string barcodeFileName = $"{appointment.CustomerId}_{appointment.Id}.png";
+                string barcodeFilePath = Path.Combine(barcodeFolderPath, barcodeFileName);
+
+                GeneratedBarcode qrcode = IronBarCode.BarcodeWriter.CreateBarcode(appointmentDetails, BarcodeEncoding.QRCode);
+                qrcode.SaveAsPng(barcodeFilePath);
+
+                SendEmailWithAttachment(recipientEmail, "Reservation confirmation", "Reservation details are in attachment", barcodeFilePath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving barcode image: {ex.Message}");
+            }
 
         }
 

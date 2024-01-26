@@ -229,6 +229,11 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return MapToDto(appointments);
         }
 
+        public Result<List<AppointmentDto>> GetCustomerAppointments(int customerId)
+        {
+            var appointments = _repository.GetCustomerAppointments(customerId);
+            return MapToDto(appointments);
+        }
 
         public bool IsEquipmentReserved(int equipmentId)
         {
@@ -241,6 +246,32 @@ namespace ISAProject.Modules.Company.Core.UseCases
 
             return canEquipmentBeDeleted;
 
+        }
+
+        public List<string> RetrieveBarcodeImageData(string userId)
+        {
+            string barcodeFolderPath = "BarCodes";
+
+            string[] barcodeFilePaths = Directory.GetFiles(barcodeFolderPath, $"{userId}_*.png");
+
+            List<byte[]> imageDataList = new List<byte[]>();
+
+            foreach (string barcodeFilePath in barcodeFilePaths)
+            {
+                byte[] imageData = File.ReadAllBytes(barcodeFilePath);
+                imageDataList.Add(imageData);
+            }
+
+            byte[][] imageDataArray = imageDataList.ToArray();
+
+            List<string> base64ImageStrings = new List<string>();
+            foreach (byte[] imageData in imageDataArray)
+            {
+                string base64ImageString = Convert.ToBase64String(imageData);
+                base64ImageStrings.Add(base64ImageString);
+            }
+
+            return base64ImageStrings;
         }
 
     }

@@ -60,7 +60,12 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
 
         public List<Appointment> GetCompanyAppointments(long companyId)
         {
-            return GetAll().FindAll(x => x.CompanyId == companyId && x.Scheduled == false);
+            return GetAll().FindAll(x => x.CompanyId == companyId && x.Status == Appointment.AppointmentStatus.Predefined);
+        }
+
+        public List<Appointment> GetCustomerAppointments(long customerId)
+        {
+            return GetAll().FindAll(x => x.CustomerId == customerId );
         }
     }
 }

@@ -20,7 +20,8 @@ namespace ISAProject.Modules.Stakeholders.API.Converters
                 Name = user.Name,
                 Surname = user.Surname,
                 Role = user.Role,
-                IsActivated = user.IsActivated
+                IsActivated = user.IsActivated,
+                PenaltyPoints = user.PenaltyPoints,
             };
         }
 

@@ -5,5 +5,7 @@
         bool Exists(string username);
         User? GetActiveUserByEmail(string email);
         User Create(User user);
+        List<User> GetAll();
+
     }
 }
