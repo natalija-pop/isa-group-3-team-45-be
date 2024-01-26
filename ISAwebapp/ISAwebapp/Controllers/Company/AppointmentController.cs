@@ -77,6 +77,12 @@ namespace API.Controllers.Company
             return CreateResponse(_appointmentService.GetCompanyAppointments(companyId));
         }
 
+        [HttpGet("getCustomerAppointments/{customerId:int}")]
+        public ActionResult<AppointmentDto> GetCustomerAppointments([FromRoute] int customerId)
+        {
+            return CreateResponse(_appointmentService.GetCustomerAppointments(customerId));
+        }
+
         [HttpPut("reserveAppointment")]
         public ActionResult<AppointmentDto> ReserveAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
@@ -90,6 +96,13 @@ namespace API.Controllers.Company
             bool isEquipmentReserved = _appointmentService.IsEquipmentReserved(equipmentId);
 
             return Ok(isEquipmentReserved);
+        }
+
+        [HttpGet("barcode/{userId:int}")]
+        public IActionResult GetBarcodeImage([FromRoute] int userId)
+        {
+            List<string> base64ImageStrings = _appointmentService.RetrieveBarcodeImageData(userId.ToString());
+            return Ok(base64ImageStrings);
         }
     }
 }

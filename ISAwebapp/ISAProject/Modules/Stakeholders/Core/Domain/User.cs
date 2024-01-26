@@ -11,6 +11,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
         public UserRole Role { get; private set; }
         public bool IsActivated { get; private set; } = false;
         public bool ForcePasswordReset { get; private set; } 
+        public int PenaltyPoints { get;  set; }
 
         public User() {}
 
@@ -22,6 +23,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
             Surname = surname;
             Role = role;
             IsActivated = isActivated;
+            PenaltyPoints = 0;
             ForcePasswordReset = (role == UserRole.SystemAdministrator || role == UserRole.CompanyAdministrator);
             Validate();
         }

@@ -29,5 +29,10 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
         {
             return _dbContext.Users.FirstOrDefault(user => user.Email == email && user.IsActivated);
         }
+
+        public List<User> GetAll()
+        {
+            return _dbContext.Users.ToList();
+        }
     }
 }

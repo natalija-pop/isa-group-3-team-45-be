@@ -11,5 +11,6 @@ namespace ISAProject.Modules.Stakeholders.API.Dtos
         public string Surname { get; set; }
         public UserRole Role { get; set; }
         public bool IsActivated { get; set; }
+        public int PenaltyPoints {  get; set; }
     }
 }
