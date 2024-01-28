@@ -87,6 +87,29 @@ namespace ISAProject.Modules.Company.Core.UseCases
             }
 
         }
+
+        public Result<AppointmentDto> CancelAppointment(AppointmentDto appointmentDto)
+        {
+            try
+            {
+                var app = _repository.Get(appointmentDto.Id);
+                app.CustomerId = null;
+                app.CustomerName = null;
+                app.CustomerSurname = null;
+                app.Status = Appointment.AppointmentStatus.Predefined;
+                app.Equipment.Clear();
+                return MapToDto(_repository.Update(app));
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
         public Result<List<AppointmentDto>> GetAll()
         {
             var appointments = _repository.GetAll();

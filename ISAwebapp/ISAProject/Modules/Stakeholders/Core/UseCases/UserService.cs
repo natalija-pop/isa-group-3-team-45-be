@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.Eventing.Reader;
+using AutoMapper;
 using FluentResults;
 using ISAProject.Configuration.Core.UseCases;
 using ISAProject.Modules.Stakeholders.API.Dtos;
@@ -56,5 +57,20 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             }
         }
 
+        public void AddCancelationPenalty(long? userId, DateTime s)
+        {
+            var user = CrudRepository.Get(userId.GetValueOrDefault());
+
+            if (s - DateTime.Now > TimeSpan.FromHours(24))
+            {
+                user.PenaltyPoints += 1;
+            }
+            else
+            {
+                user.PenaltyPoints += 2;
+            }
+
+            CrudRepository.Update(user);
+        }
     }
 }

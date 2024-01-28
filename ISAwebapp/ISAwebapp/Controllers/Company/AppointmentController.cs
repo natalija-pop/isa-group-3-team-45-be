@@ -1,4 +1,6 @@
-﻿using ISAProject.Modules.Company.API.Dtos;
+﻿using ISAProject.Configuration.Core.UseCases;
+using ISAProject.Modules.Company.API;
+using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +13,14 @@ namespace API.Controllers.Company
         private readonly IAppointmentService _appointmentService;
         private readonly IEquipmentService _equipmentService;
         private readonly IEmailService _emailService;
+        private readonly IUserService _userService;
 
-        public AppointmentController(IAppointmentService service, IEquipmentService equipmentService, IEmailService emailService)
+        public AppointmentController(IAppointmentService service, IEquipmentService equipmentService, IEmailService emailService, IUserService userService)
         {
             _appointmentService = service;
             _equipmentService = equipmentService;
             _emailService = emailService;
+            _userService = userService;
         }
         
         [HttpPost]
@@ -88,6 +92,14 @@ namespace API.Controllers.Company
         {
             _emailService.SendAppointmentConfirmation(appointmentDto, userEmail);
             return CreateResponse(_appointmentService.ReserveAppointment(appointmentDto));
+        }
+        
+        [HttpPut("cancelAppointment")]
+        public ActionResult<AppointmentDto> CancelAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] long userId)
+        {
+            _equipmentService.UpdateCanceled(appointmentDto.Equipment);
+            _userService.AddCancelationPenalty(userId, appointmentDto.Start);
+            return CreateResponse(_appointmentService.CancelAppointment(appointmentDto));
         }
 
         [HttpGet("checkIfEquipmentIsReserved/{equipmentId:int}")]
