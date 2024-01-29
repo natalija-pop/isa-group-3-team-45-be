@@ -15,8 +15,8 @@ namespace ISAProject.Modules.Company.Core.UseCases
     {
         private readonly IAppointmentRepository _repository;
         private readonly DatabaseContext _dbContext;
-
         private readonly ICompanyAdminRepo _companyAdminRepo;
+        
         public AppointmentService(IMapper mapper, IAppointmentRepository repository, ICompanyAdminRepo companyRepo, DatabaseContext dbContext) : base(mapper)
         {
             _repository = repository;
@@ -109,50 +109,6 @@ namespace ISAProject.Modules.Company.Core.UseCases
                     appointment.CustomerId = appointmentDto.CustomerId;
                     appointment.CustomerName = appointmentDto.CustomerName;
                     appointment.CustomerSurname = appointmentDto.CustomerSurname;
-
-        }
-
-        public Result<AppointmentDto> ReserveAppointment(AppointmentDto appointmentDto)
-        {
-            try
-            {
-                foreach (var eq in appointmentDto.Equipment)
-                {
-                    eq.ReservedQuantity += 1;
-                }
-                var result = _repository.Update(MapToDomain(appointmentDto));
-                return MapToDto(result);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
-            }
-
-        }
-
-        public Result<AppointmentDto> MarkAppointmentAsProcessed(AppointmentDto appointmentDto)
-        {
-            appointmentDto.Equipment.Clear();
-            try
-            {
-                var result = _repository.Update(MapToDomain(appointmentDto));
-                return MapToDto(result);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
-            }
-
-        }
-
                     var existingEquipment = _repository.GetWithIds(equipmentIds);
                     appointment.Equipment = existingEquipment;
                     foreach (var equipment in appointment.Equipment)
@@ -176,6 +132,25 @@ namespace ISAProject.Modules.Company.Core.UseCases
                     return Result.Fail(FailureCode.Internal).WithError($"An error occurred: {e.Message}");
                 }
             }
+        }
+
+        public Result<AppointmentDto> MarkAppointmentAsProcessed(AppointmentDto appointmentDto)
+        {
+            appointmentDto.Equipment.Clear();
+            try
+            {
+                var result = _repository.Update(MapToDomain(appointmentDto));
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+
         }
 
         public Result<AppointmentDto> Get(int id)
