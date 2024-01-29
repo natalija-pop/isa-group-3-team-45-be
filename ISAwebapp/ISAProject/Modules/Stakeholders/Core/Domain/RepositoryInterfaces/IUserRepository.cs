@@ -6,6 +6,7 @@
         User? GetActiveUserByEmail(string email);
         User Create(User user);
         List<User> GetAll();
-
+        User GetById(long? appointmentCustomerId);
+        User Update(User user);
     }
 }

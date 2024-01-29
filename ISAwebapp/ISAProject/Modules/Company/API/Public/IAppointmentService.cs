@@ -1,12 +1,6 @@
 ﻿using FluentResults;
-using ISAProject.Configuration.Core.UseCases;
 using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ISAProject.Modules.Company.API.Public
 {
@@ -26,7 +20,7 @@ namespace ISAProject.Modules.Company.API.Public
         public bool IsEquipmentReserved(int equipmentId);
 
         Result<AppointmentDto> ReserveScheduledAppointment(AppointmentDto appointmentDto);
-
+        Result<AppointmentDto> ReadAppointmentQrCode(string filePath);
         List<string> RetrieveBarcodeImageData(string userId);
     }
 }

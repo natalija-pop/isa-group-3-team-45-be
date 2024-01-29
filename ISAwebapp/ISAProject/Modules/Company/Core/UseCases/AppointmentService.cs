@@ -16,12 +16,16 @@ namespace ISAProject.Modules.Company.Core.UseCases
         private readonly IAppointmentRepository _repository;
         private readonly DatabaseContext _dbContext;
         private readonly ICompanyAdminRepo _companyAdminRepo;
-        
-        public AppointmentService(IMapper mapper, IAppointmentRepository repository, ICompanyAdminRepo companyRepo, DatabaseContext dbContext) : base(mapper)
+        private readonly IQrCodeReaderService _qrCodeReaderService;
+        private readonly IUserRepository _userRepository;
+
+        public AppointmentService(IMapper mapper, IAppointmentRepository repository, ICompanyAdminRepo companyRepo, DatabaseContext dbContext, IQrCodeReaderService qrCodeReaderService, IUserRepository userRepository) : base(mapper)
         {
             _repository = repository;
             _companyAdminRepo = companyRepo;
             _dbContext = dbContext;
+            _qrCodeReaderService = qrCodeReaderService;
+            _userRepository = userRepository;
         }
         public Result<AppointmentDto> CreatePredefinedAppointment(AppointmentDto appointmentDto)
         {
@@ -303,6 +307,22 @@ namespace ISAProject.Modules.Company.Core.UseCases
                 base64ImageStrings.Add(base64ImageString);
             }
             return base64ImageStrings;
+        }
+
+        public Result<AppointmentDto> ReadAppointmentQrCode(string filePath)
+        {
+            var appointment = _repository.Get(_qrCodeReaderService.ReadQrCode(filePath));
+            if (appointment.IsExpired()) GivePenaltyPoints(appointment);
+            return MapToDto(appointment);
+        }
+
+        private void GivePenaltyPoints(Appointment appointment)
+        {
+            if (appointment.CustomerId == null) throw new ArgumentNullException("Exception! Reserved appointments must contain CustomerId!");
+            var employee = _userRepository.GetById(appointment.CustomerId);
+            employee.GetPenaltyPoints();
+            _userRepository.Update(employee);
+            _repository.Update(appointment);
         }
 
         private List<Appointment> GenerateAppointmentsForAllDay(DateTime selectedDate, Core.Domain.Company company, List<CompanyAdmin> administrators)

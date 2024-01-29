@@ -50,5 +50,10 @@ namespace ISAProject.Modules.Company.Core.Domain
             Canceled,
             Processed
         }
+
+        public bool IsExpired()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

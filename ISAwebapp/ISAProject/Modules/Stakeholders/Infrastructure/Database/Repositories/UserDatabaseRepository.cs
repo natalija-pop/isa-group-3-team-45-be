@@ -34,5 +34,24 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
         {
             return _dbContext.Users.ToList();
         }
+
+        public User GetById(long? appointmentCustomerId)
+        {
+            return _dbContext.Users.FirstOrDefault(user => user.Id == appointmentCustomerId && user.IsActivated);
+        }
+
+        public User Update(User user)
+        {
+            try
+            {
+                _dbContext.Update(user);
+                _dbContext.SaveChanges();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                throw new KeyNotFoundException("Exception! User not found!");
+            }
+            return user;
+        }
     }
 }
