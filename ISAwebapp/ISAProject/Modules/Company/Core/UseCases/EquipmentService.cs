@@ -28,5 +28,18 @@ namespace ISAProject.Modules.Company.Core.UseCases
 
             return MapToDto(filteredResult);
         }
+
+        public void UpdateProcessed(ICollection<EquipmentDto>? processedEquipment)
+        {
+            if (processedEquipment != null)
+            {
+                foreach (var eq in processedEquipment)
+                {
+                    eq.Quantity -= 1;
+                    eq.ReservedQuantity -= 1;
+                    Update(eq);
+                }
+            }
+        }
     }
 }

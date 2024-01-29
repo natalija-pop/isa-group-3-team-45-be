@@ -57,6 +57,26 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             SendEmail(recipientEmail, emailSubject, emailBody);
         }
 
+        public void SendProcessedAppointmentConfirmation(AppointmentDto appointment, string userEmail)
+        {
+            var mailBodyBuilder = new StringBuilder("Poštovani,<br><br>");
+            mailBodyBuilder.Append("Želimo se iskreno zahvaliti na uspešno završenoj rezervaciji opreme putem naše aplikacije.<br><br>");
+            mailBodyBuilder.Append($"Ime:{appointment.CustomerName}<br>" +
+                                   $"Prezime: {appointment.CustomerSurname}<br>");
+            mailBodyBuilder.Append($"Datum i vreme rezervacije: {appointment.Start} <br>");
+            mailBodyBuilder.Append($"Preuzeta oprema: <br>");
+            foreach (var equipment in appointment.Equipment)
+            {
+                mailBodyBuilder.Append($" - {equipment.Name}<br>");
+            }
+            mailBodyBuilder.Append("<br><br>");
+            mailBodyBuilder.Append("Hvala Vam još jednom na poverenju. Nadamo se da smo ispunili Vaša očekivanja.");
+            var emailBody = mailBodyBuilder.ToString();
+            var emailSubject = "Uspešno preuzimanje rezervacije";
+
+            SendEmail(userEmail, emailSubject, emailBody);
+        }
+
         private void SendEmail(string recipientEmail, string emailSubject, string emailBody)
         {
             using (MailMessage mail = new MailMessage())

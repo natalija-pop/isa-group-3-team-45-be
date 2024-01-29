@@ -34,6 +34,12 @@ namespace API.Controllers.Stakeholders
             return CreateResponse(_userService.Get(userId));
         }
 
+        [HttpGet("getCompanyAdmin/{companyAdminId:int}")]
+        public ActionResult<UserDto> GetCompanyAdmin([FromRoute] int companyAdminId)
+        {
+            return CreateResponse(_userService.GetCompanyAdmin(companyAdminId));
+        }
+
         [HttpPut("{userId:int}")]
         public ActionResult<UserDto> Update([FromBody] UserDto userDto)
         {
