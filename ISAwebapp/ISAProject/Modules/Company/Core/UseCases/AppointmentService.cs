@@ -280,6 +280,17 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return MapToDto(appointments);
         }
 
+        public Result<List<AppointmentDto>> GetCustomerScheduledAppointments(int customerId)
+        {
+            var appointments = _repository.GetCustomerScheduledAppointments(customerId);
+            return MapToDto(appointments);
+        }
+        public Result<List<AppointmentDto>> GetCustomerProcessedAppointments(int customerId)
+        {
+            var appointments = _repository.GetCustomerProcessedAppointments(customerId);
+            return MapToDto(appointments);
+        }
+
         public bool IsEquipmentReserved(int equipmentId)
         {
             var allAppointments = GetAll().Value;

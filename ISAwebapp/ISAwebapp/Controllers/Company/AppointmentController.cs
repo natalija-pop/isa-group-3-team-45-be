@@ -87,6 +87,18 @@ namespace API.Controllers.Company
             return CreateResponse(_appointmentService.GetCustomerAppointments(customerId));
         }
 
+        [HttpGet("getCustomerProcessedAppointments/{customerId:int}")]
+        public ActionResult<AppointmentDto> GetCustomerProcessedAppointments([FromRoute] int customerId)
+        {
+            return CreateResponse(_appointmentService.GetCustomerProcessedAppointments(customerId));
+        }
+
+        [HttpGet("getCustomerScheduledAppointments/{customerId:int}")]
+        public ActionResult<AppointmentDto> GetCustomerScheduledAppointments([FromRoute] int customerId)
+        {
+            return CreateResponse(_appointmentService.GetCustomerScheduledAppointments(customerId));
+        }
+
         [HttpPut("reserveAppointment")]
         public ActionResult<AppointmentDto> ReserveAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {

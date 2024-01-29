@@ -11,10 +11,11 @@ namespace ISAProject.Modules.Company.Core.Domain
         public int Quantity { get; private set; }
         public int ReservedQuantity { get; set; }
         public long CompanyId { get; set; }
+        public double Price { get; set; }
 
         public Equipment() {}
 
-        public Equipment(string name, string description, EquipmentType type, int quantity, long companyId)
+        public Equipment(string name, string description, EquipmentType type, int quantity, long companyId, double price)
         {
             Name = name;
             Description = description;
@@ -22,6 +23,7 @@ namespace ISAProject.Modules.Company.Core.Domain
             ReservedQuantity = 0;
             Type = type;
             CompanyId = companyId;
+            Price = price;
         }
     }
 }
