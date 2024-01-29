@@ -22,5 +22,6 @@ namespace ISAProject.Modules.Company.API.Public
         Result<AppointmentDto> ReserveScheduledAppointment(AppointmentDto appointmentDto);
         Result<AppointmentDto> ReadAppointmentQrCode(string filePath);
         List<string> RetrieveBarcodeImageData(string userId);
+        Result<List<AppointmentDto>> GetAllByCompanyAdmin(int companyAdminId);
     }
 }

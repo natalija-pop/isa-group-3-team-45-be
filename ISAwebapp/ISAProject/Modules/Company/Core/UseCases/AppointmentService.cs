@@ -140,27 +140,26 @@ namespace ISAProject.Modules.Company.Core.UseCases
 
         public Result<AppointmentDto> MarkAppointmentAsProcessed(AppointmentDto appointmentDto)
         {
-            appointmentDto.Equipment.Clear();
-            try
+            var appointment = _repository.Get(appointmentDto.Id);
+            if (!appointment.IsEligibleForPickUp()) return new Result<AppointmentDto>();
+            if (appointment.IsExpired())
             {
-                var result = _repository.Update(MapToDomain(appointmentDto));
-                return MapToDto(result);
+                GivePenaltyPoints(appointment);
+                return new Result<AppointmentDto>();
             }
-            catch (KeyNotFoundException e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
-            }
-
+            var equipmentIds = appointment.Equipment.Select(e => (int)e.Id).ToList();
+            var reservedEquipment = _repository.GetWithIds(equipmentIds);
+            reservedEquipment.ForEach(e => e.ReduceQuantity(1));
+            appointment.Equipment.Clear();
+            appointment.Status = Appointment.AppointmentStatus.Processed;
+            _repository.Update(appointment);
+            return MapToDto(appointment);
         }
 
         public Result<AppointmentDto> Get(int id)
         {
-            var encounter = _repository.Get(id);
-            return MapToDto(encounter);
+            var appointment = _repository.Get(id);
+            return MapToDto(appointment);
 
         }
         
@@ -307,6 +306,18 @@ namespace ISAProject.Modules.Company.Core.UseCases
                 base64ImageStrings.Add(base64ImageString);
             }
             return base64ImageStrings;
+        }
+
+        public Result<List<AppointmentDto>> GetAllByCompanyAdmin(int companyAdminId)
+        {
+            var appointments = _repository.GetReservedByCompanyAdmin(companyAdminId);
+            if (appointments.Count <= 0) throw new ArgumentOutOfRangeException("Exception! No Appointments by this Admin!");
+            appointments.ForEach(appointment =>
+            {
+                if (appointment.IsExpired()) GivePenaltyPoints(appointment);
+            });
+            return MapToDto(appointments);
+
         }
 
         public Result<AppointmentDto> ReadAppointmentQrCode(string filePath)

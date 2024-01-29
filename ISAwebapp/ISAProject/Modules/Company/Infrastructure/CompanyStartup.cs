@@ -27,6 +27,7 @@ namespace ISAProject.Modules.Company.Infrastructure
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IEquipmentService, EquipmentService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IQrCodeReaderService, QrCodeReaderService>();
         }
 
         private static void SetupCore(IServiceCollection services)

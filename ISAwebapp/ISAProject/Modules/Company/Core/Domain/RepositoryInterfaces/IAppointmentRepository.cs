@@ -16,5 +16,6 @@ namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
         
         Appointment GetById(long id, DatabaseContext dbContext);
         bool IsTimeSlotAvailable(DateTime start, int duration, long companyId, DatabaseContext dbContext);
+        List<Appointment> GetReservedByCompanyAdmin(int companyAdminId);
     }
 }

@@ -9,13 +9,11 @@ namespace API.Controllers.Company
     public class AppointmentController : BaseApiController
     { 
         private readonly IAppointmentService _appointmentService;
-        private readonly IEquipmentService _equipmentService;
         private readonly IEmailService _emailService;
 
-        public AppointmentController(IAppointmentService service, IEquipmentService equipmentService, IEmailService emailService)
+        public AppointmentController(IAppointmentService service, IEmailService emailService)
         {
             _appointmentService = service;
-            _equipmentService = equipmentService;
             _emailService = emailService;
         }
         
@@ -32,6 +30,12 @@ namespace API.Controllers.Company
             _emailService.SendAppointmentConfirmation(appointmentDto, userEmail);
             var result = _appointmentService.ReserveScheduledAppointment(appointmentDto);
             return CreateResponse(result);
+        }
+
+        [HttpGet("getReservedByCompanyAdmin/{companyAdminId:int}")]
+        public ActionResult<AppointmentDto> GetReservedByCompanyAdmin([FromRoute] int companyAdminId)
+        {
+            return CreateResponse(_appointmentService.GetAllByCompanyAdmin(companyAdminId));
         }
 
         [HttpGet("getAll")]
@@ -93,9 +97,9 @@ namespace API.Controllers.Company
         [HttpPut("markAppointmentAsProcessed")]
         public ActionResult<AppointmentDto> MarkAppointmentAsProcessed([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
-            _emailService.SendProcessedAppointmentConfirmation(appointmentDto, userEmail);
-            _equipmentService.UpdateProcessed(appointmentDto.Equipment);
-            return CreateResponse(_appointmentService.MarkAppointmentAsProcessed(appointmentDto));
+            var result = _appointmentService.MarkAppointmentAsProcessed(appointmentDto);
+            if (result.Value.Id != 0) _emailService.SendProcessedAppointmentConfirmation(appointmentDto, userEmail);
+            return CreateResponse(result);
         }
 
         [HttpGet("checkIfEquipmentIsReserved/{equipmentId:int}")]
@@ -111,6 +115,12 @@ namespace API.Controllers.Company
         {
             List<string> base64ImageStrings = _appointmentService.RetrieveBarcodeImageData(userId.ToString());
             return Ok(base64ImageStrings);
+        }
+
+        [HttpPost("barcode/read")]
+        public ActionResult<AppointmentDto> ReadQrCode([FromForm] string filePath)
+        {
+            return CreateResponse(_appointmentService.ReadAppointmentQrCode(filePath));
         }
     }
 }

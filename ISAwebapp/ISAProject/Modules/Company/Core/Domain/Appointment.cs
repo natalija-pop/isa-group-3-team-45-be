@@ -43,17 +43,29 @@ namespace ISAProject.Modules.Company.Core.Domain
             return CustomerId == null || CustomerId == 0;
         }
 
+        public bool IsExpired()
+        {
+            var isExpired = Start.AddMinutes(_duration) < DateTime.Now && (Status == AppointmentStatus.Predefined || Status == AppointmentStatus.Scheduled);
+            if (isExpired)
+            {
+                Status = AppointmentStatus.Expired;
+            }
+            return isExpired;
+        }
+
+        public bool IsEligibleForPickUp()
+        {
+            return Status == AppointmentStatus.Predefined || Status == AppointmentStatus.Scheduled;
+        }
+
         public enum AppointmentStatus
         {
             Predefined,
             Scheduled,
             Canceled,
-            Processed
+            Processed,
+            Expired
         }
 
-        public bool IsExpired()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

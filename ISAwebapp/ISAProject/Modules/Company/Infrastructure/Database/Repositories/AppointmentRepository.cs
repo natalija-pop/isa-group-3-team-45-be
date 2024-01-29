@@ -31,6 +31,11 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
             return !availableTimeSlots.Any();
         }
 
+        public List<Appointment> GetReservedByCompanyAdmin(int companyAdminId)
+        {
+            return _context.Appointments.Where(a => a.AdminId == (long)companyAdminId && a.CustomerId != 0).ToList();
+        }
+
         public Appointment Get(long id)
         {
             var appointment = _context.Appointments.Find(id);
