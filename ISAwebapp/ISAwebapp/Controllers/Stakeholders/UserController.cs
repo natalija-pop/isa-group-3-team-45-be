@@ -28,6 +28,12 @@ namespace API.Controllers.Stakeholders
             return CreateResponse(_userService.GetPaged(page, pageSize));
         }
 
+        [HttpPost("getUsersByIds")]
+        public ActionResult<UserDto> GetUsersByIds([FromBody] List<long> userIds)
+        {
+            return CreateResponse(_userService.GetUsersByIds(userIds));
+        }
+
         [HttpGet("get/{userId:int}")]
         public ActionResult<UserDto> Get([FromRoute] int userId)
         {
