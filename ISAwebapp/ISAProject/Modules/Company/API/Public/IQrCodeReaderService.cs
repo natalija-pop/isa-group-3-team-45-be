@@ -2,6 +2,6 @@
 {
     public interface IQrCodeReaderService
     {
-        long ReadQrCode(string filePath);
+        long ReadQrCode(Stream stream);
     }
 }

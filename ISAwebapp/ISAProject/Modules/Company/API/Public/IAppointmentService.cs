@@ -20,8 +20,8 @@ namespace ISAProject.Modules.Company.API.Public
         public bool IsEquipmentReserved(int equipmentId);
 
         Result<AppointmentDto> ReserveScheduledAppointment(AppointmentDto appointmentDto);
-        Result<AppointmentDto> ReadAppointmentQrCode(string filePath);
+        Result<AppointmentDto> ReadAppointmentQrCode(Stream stream);
         List<string> RetrieveBarcodeImageData(string userId);
-        Result<List<AppointmentDto>> GetAllByCompanyAdmin(int companyAdminId);
+        Result<List<AppointmentDto>> GetReservedByCompanyAdmin(int companyAdminId);
     }
 }

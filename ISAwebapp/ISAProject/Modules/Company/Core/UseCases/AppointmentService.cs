@@ -224,26 +224,20 @@ namespace ISAProject.Modules.Company.Core.UseCases
                 while (currentTime.AddMinutes(existingAppointments.First().Duration) <= endTime)
                 {
                     User availableAdmin = FindAvailableAdministrator(administrators, existingAppointments, currentTime);
-                    if (availableAdmin != null)
+                    var recommendedAppointment = new Appointment
                     {
-                        var recommendedAppointment = new Appointment
-                        {
-                            Start = currentTime,
-                            AdminId = availableAdmin.Id,
-                            AdminName = availableAdmin.Name,
-                            AdminSurname = availableAdmin.Surname,
-                            CustomerName = "",
-                            CustomerSurname = "",
-                            CompanyId = companyId,
-                        };
-
-                        recommendedAppointments.Add(recommendedAppointment);
-                    }
-
+                        Start = currentTime,
+                        AdminId = availableAdmin.Id,
+                        AdminName = availableAdmin.Name,
+                        AdminSurname = availableAdmin.Surname,
+                        CustomerName = "",
+                        CustomerSurname = "",
+                        CompanyId = companyId,
+                    };
+                    recommendedAppointments.Add(recommendedAppointment);
                     currentTime = currentTime.AddMinutes(existingAppointments.First().Duration);
                 }
             }
-
             return recommendedAppointments;
         }
 
@@ -308,7 +302,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return base64ImageStrings;
         }
 
-        public Result<List<AppointmentDto>> GetAllByCompanyAdmin(int companyAdminId)
+        public Result<List<AppointmentDto>> GetReservedByCompanyAdmin(int companyAdminId)
         {
             var appointments = _repository.GetReservedByCompanyAdmin(companyAdminId);
             if (appointments.Count <= 0) throw new ArgumentOutOfRangeException("Exception! No Appointments by this Admin!");
@@ -320,9 +314,9 @@ namespace ISAProject.Modules.Company.Core.UseCases
 
         }
 
-        public Result<AppointmentDto> ReadAppointmentQrCode(string filePath)
+        public Result<AppointmentDto> ReadAppointmentQrCode(Stream stream)
         {
-            var appointment = _repository.Get(_qrCodeReaderService.ReadQrCode(filePath));
+            var appointment = _repository.Get(_qrCodeReaderService.ReadQrCode(stream));
             if (appointment.IsExpired()) GivePenaltyPoints(appointment);
             return MapToDto(appointment);
         }
@@ -351,6 +345,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
                     var recommendedAppointment = new Appointment
                     {
                         Start = currentTime,
+                        AdminId = availableAdmin.Id,
                         AdminName = availableAdmin.Name,
                         AdminSurname = availableAdmin.Surname,
                         CustomerName = "",

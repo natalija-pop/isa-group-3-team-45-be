@@ -2,7 +2,6 @@
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
-
 namespace API.Controllers.Company
 {
     [Route("api/appointment")]
@@ -27,15 +26,15 @@ namespace API.Controllers.Company
         [HttpPost("additionalAppointment")]
         public ActionResult<AppointmentDto> CreateAdditionalAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
-            _emailService.SendAppointmentConfirmation(appointmentDto, userEmail);
             var result = _appointmentService.ReserveScheduledAppointment(appointmentDto);
+            if(result.IsSuccess) _emailService.SendAppointmentConfirmation(result.Value, userEmail);
             return CreateResponse(result);
         }
 
         [HttpGet("getReservedByCompanyAdmin/{companyAdminId:int}")]
         public ActionResult<AppointmentDto> GetReservedByCompanyAdmin([FromRoute] int companyAdminId)
         {
-            return CreateResponse(_appointmentService.GetAllByCompanyAdmin(companyAdminId));
+            return CreateResponse(_appointmentService.GetReservedByCompanyAdmin(companyAdminId));
         }
 
         [HttpGet("getAll")]
@@ -90,8 +89,9 @@ namespace API.Controllers.Company
         [HttpPut("reserveAppointment")]
         public ActionResult<AppointmentDto> ReserveAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
-            _emailService.SendAppointmentConfirmation(appointmentDto, userEmail);
-            return CreateResponse(_appointmentService.ReserveAppointment(appointmentDto));
+            var result = _appointmentService.ReserveAppointment(appointmentDto);
+            if(result.IsSuccess) _emailService.SendAppointmentConfirmation(result.Value, userEmail);
+            return CreateResponse(result);
         }
 
         [HttpPut("markAppointmentAsProcessed")]
@@ -118,9 +118,13 @@ namespace API.Controllers.Company
         }
 
         [HttpPost("barcode/read")]
-        public ActionResult<AppointmentDto> ReadQrCode([FromForm] string filePath)
+        public ActionResult<AppointmentDto> ReadQrCode([FromForm] IFormFile qrCodeFile)
         {
-            return CreateResponse(_appointmentService.ReadAppointmentQrCode(filePath));
+            if(qrCodeFile.Length == 0)
+            {
+                return BadRequest("No file provided");
+            }
+            return CreateResponse(_appointmentService.ReadAppointmentQrCode(qrCodeFile.OpenReadStream()));
         }
     }
 }

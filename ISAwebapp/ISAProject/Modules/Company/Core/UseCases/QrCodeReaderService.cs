@@ -3,13 +3,17 @@ namespace ISAProject.Modules.Company.Core.UseCases;
 
 public class QrCodeReaderService: IQrCodeReaderService
 {
-    public long ReadQrCode(string filePath)
+    public long ReadQrCode(Stream stream)
     {
-        var qrCodeReadings = IronBarCode.BarcodeReader.Read(filePath);
-        if (qrCodeReadings == null) throw new ArgumentException("Exception! Invalid file path!");
-        foreach (var qrCoreReading in qrCodeReadings)
+        var qrCodeReadings = IronBarCode.BarcodeReader.Read(stream);
+        if (qrCodeReadings == null || !qrCodeReadings.Any())
         {
-            var qrCodeReadingText = qrCoreReading.Text;
+            throw new ArgumentException("Exception! No valid QR code found in the provided stream.");
+        }
+
+        foreach (var qrCodeReading in qrCodeReadings)
+        {
+            var qrCodeReadingText = qrCodeReading.Text;
             if (qrCodeReadingText.StartsWith("AppointmentEAN"))
             {
                 var appointmentEAN = qrCodeReadingText.Split("\n")[0].Split(":")[1].Trim();
