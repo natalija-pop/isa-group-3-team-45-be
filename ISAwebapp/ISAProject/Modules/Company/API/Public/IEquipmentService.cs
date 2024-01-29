@@ -14,6 +14,7 @@ namespace ISAProject.Modules.Company.API.Public
         Result<PagedResult<EquipmentDto>> GetPaged(int page, int pageSize);
         Result<List<EquipmentDto>> Search(string searchKeyword);
         Result<List<EquipmentDto>> GetByCompanyId(int page, int pageSize, long companyId);
+        void UpdateProcessed(ICollection<EquipmentDto>? processedEquipment);
     }
 }
 

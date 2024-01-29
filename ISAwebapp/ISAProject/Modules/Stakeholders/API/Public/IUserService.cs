@@ -8,6 +8,7 @@ namespace ISAProject.Modules.Stakeholders.API.Public
     {
         Result<UserDto> Create(UserDto userDto);
         Result<UserDto> Get(int id);
+        Result<CompanyAdminDto> GetCompanyAdmin(int companyAdminId);
         Result<UserDto> Update(UserDto userDto);
         void AddCancelationPenalty(long? userId, DateTime start);
         Result Delete(int id);

@@ -110,6 +110,26 @@ namespace ISAProject.Modules.Company.Core.UseCases
             }
         }
 
+
+        public Result<AppointmentDto> MarkAppointmentAsProcessed(AppointmentDto appointmentDto)
+        {
+            appointmentDto.Equipment.Clear();
+            try
+            {
+                var result = _repository.Update(MapToDomain(appointmentDto));
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+
+        }
+
         public Result<List<AppointmentDto>> GetAll()
         {
             var appointments = _repository.GetAll();
@@ -137,6 +157,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
                     var recommendedAppointment = new Appointment
                     {
                         Start = currentTime,
+                        AdminId = availableAdmin.Id,
                         AdminName = availableAdmin.Name,
                         AdminSurname = availableAdmin.Surname,
                         CustomerName = "",
@@ -188,6 +209,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
                         var recommendedAppointment = new Appointment
                         {
                             Start = currentTime,
+                            AdminId = availableAdmin.Id,
                             AdminName = availableAdmin.Name,
                             AdminSurname = availableAdmin.Surname,
                             CustomerName = "",
