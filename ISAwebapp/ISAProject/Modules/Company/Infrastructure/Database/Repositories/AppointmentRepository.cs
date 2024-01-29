@@ -20,6 +20,11 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
             return appointment;
         }
 
+        public Appointment GetById(long id, DatabaseContext dbContext)
+        {
+            return dbContext.Appointments.Find(id);
+        }
+
         public Appointment Get(long id)
         {
             var appointment = _context.Appointments.Find(id);

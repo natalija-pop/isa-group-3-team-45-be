@@ -20,5 +20,8 @@ namespace ISAProject.Configuration.Core.UseCases
             .WithMetadata("code", 409);
         public static readonly IError Internal = new Error("Internal server error.")
             .WithMetadata("code", 500);
+
+        public static readonly IError InsufficientData = new Error("Insufficient amount of Equipment in stock.")
+            .WithMetadata("code", 500);
     }
 }

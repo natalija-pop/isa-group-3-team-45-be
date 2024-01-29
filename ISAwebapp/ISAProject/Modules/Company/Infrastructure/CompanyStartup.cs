@@ -36,7 +36,8 @@ namespace ISAProject.Modules.Company.Infrastructure
             services.AddScoped(typeof(IAppointmentRepository), typeof(AppointmentRepository));
 
             services.AddDbContext<DatabaseContext>(opt =>
-                opt.UseNpgsql(DatabaseConnectionBuilder.Build("isa")));
+                opt.UseNpgsql(DatabaseConnectionBuilder.Build("isa"),
+                    x => x.MigrationsHistoryTable("__EFMigrationsHistory", "isa")));
         }
     }
 }

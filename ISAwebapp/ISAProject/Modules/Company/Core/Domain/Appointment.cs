@@ -38,6 +38,11 @@ namespace ISAProject.Modules.Company.Core.Domain
             Status = AppointmentStatus.Predefined;
         }
 
+        public bool IsAvailableForReservation()
+        {
+            return CustomerId == null || CustomerId == 0;
+        }
+
         public enum AppointmentStatus
         {
             Predefined,

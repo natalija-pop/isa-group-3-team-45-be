@@ -1,7 +1,10 @@
-﻿namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
+﻿using ISAProject.Modules.Database;
+
+namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
 {
     public interface IAppointmentRepository
     {
+        Appointment GetById(long id, DatabaseContext dbContext);
         Appointment Get(long id);
         List<Appointment> GetAll();
         Appointment Create(Appointment appointment);

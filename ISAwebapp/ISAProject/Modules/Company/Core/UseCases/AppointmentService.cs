@@ -5,6 +5,7 @@ using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Company.Core.Domain;
 using ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces;
+using ISAProject.Modules.Database;
 using ISAProject.Modules.Stakeholders.Core.Domain;
 using ISAProject.Modules.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Microsoft.IdentityModel.Tokens;
@@ -13,12 +14,14 @@ namespace ISAProject.Modules.Company.Core.UseCases
     public class AppointmentService: MappingService<AppointmentDto, Appointment>, IAppointmentService
     {
         private readonly IAppointmentRepository _repository;
+        private readonly DatabaseContext _dbContext;
 
         private readonly ICompanyAdminRepo _companyAdminRepo;
-        public AppointmentService(IMapper mapper, IAppointmentRepository repository, ICompanyAdminRepo companyRepo) : base(mapper)
+        public AppointmentService(IMapper mapper, IAppointmentRepository repository, ICompanyAdminRepo companyRepo, DatabaseContext dbContext) : base(mapper)
         {
             _repository = repository;
             _companyAdminRepo = companyRepo;
+            _dbContext = dbContext;
         }
         public Result<AppointmentDto> Create(AppointmentDto appointmentDto)
         {
@@ -68,25 +71,52 @@ namespace ISAProject.Modules.Company.Core.UseCases
 
         public Result<AppointmentDto> ReserveAppointment(AppointmentDto appointmentDto)
         {
-            try
+            var equipmentDtos = appointmentDto.Equipment;
+            var equipmentIds = equipmentDtos.Select(e => e.Id).ToList();
+            using (var transaction = _dbContext.Database.BeginTransaction())
             {
-                foreach (var eq in appointmentDto.Equipment)
+                try
                 {
-                    eq.ReservedQuantity += 1;
-                }
-                var result = _repository.Update(MapToDomain(appointmentDto));
-                return MapToDto(result);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
-            }
+                    var appointment = _repository.GetById(appointmentDto.Id, _dbContext);
+                    if (appointment == null)
+                    {
+                        transaction.Rollback();
+                        return Result.Fail(FailureCode.Conflict).WithError("Error! Appointment not found or version mismatch");
+                    }
+                    if (!appointment.IsAvailableForReservation())
+                    {
+                        transaction.Rollback();
+                        return Result.Fail(FailureCode.Forbidden).WithError("Error! Appointment is already reserved");
+                    }
+                    appointment.CustomerId = appointmentDto.CustomerId;
+                    appointment.CustomerName = appointmentDto.CustomerName;
+                    appointment.CustomerSurname = appointmentDto.CustomerSurname;
 
+                    var existingEquipment = _repository.GetWithIds(equipmentIds);
+                    appointment.Equipment = existingEquipment;
+                    foreach (var equipment in appointment.Equipment)
+                    {
+                        _dbContext.Entry(equipment).Reload();
+                        if (equipment.Quantity <= 0)
+                        {
+                            transaction.Rollback();
+                            return Result.Fail(FailureCode.InsufficientData);
+                        }
+                        equipment.ReservedQuantity++;
+                    }
+                    _dbContext.Update(appointment);
+                    _dbContext.SaveChanges();
+                    transaction.Commit();
+                    return MapToDto(appointment);
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    return Result.Fail(FailureCode.Internal).WithError($"An error occurred: {e.Message}");
+                }
+            }
         }
+
         public Result<List<AppointmentDto>> GetAll()
         {
             var appointments = _repository.GetAll();
@@ -251,9 +281,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
         public List<string> RetrieveBarcodeImageData(string userId)
         {
             string barcodeFolderPath = "BarCodes";
-
             string[] barcodeFilePaths = Directory.GetFiles(barcodeFolderPath, $"{userId}_*.png");
-
             List<byte[]> imageDataList = new List<byte[]>();
 
             foreach (string barcodeFilePath in barcodeFilePaths)
@@ -261,18 +289,15 @@ namespace ISAProject.Modules.Company.Core.UseCases
                 byte[] imageData = File.ReadAllBytes(barcodeFilePath);
                 imageDataList.Add(imageData);
             }
-
             byte[][] imageDataArray = imageDataList.ToArray();
-
             List<string> base64ImageStrings = new List<string>();
+            
             foreach (byte[] imageData in imageDataArray)
             {
                 string base64ImageString = Convert.ToBase64String(imageData);
                 base64ImageStrings.Add(base64ImageString);
             }
-
             return base64ImageStrings;
         }
-
     }
 }
