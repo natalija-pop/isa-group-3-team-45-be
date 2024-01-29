@@ -6,6 +6,7 @@
         User? GetActiveUserByEmail(string email);
         User Create(User user);
         List<User> GetAll();
+        List<User> GetUsersByIds(List<long> userIds);
 
     }
 }

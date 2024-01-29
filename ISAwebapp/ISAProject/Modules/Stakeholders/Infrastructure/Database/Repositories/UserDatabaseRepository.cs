@@ -34,5 +34,10 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
         {
             return _dbContext.Users.ToList();
         }
+
+        public List<User> GetUsersByIds(List<long> userIds)
+        { 
+            return _dbContext.Users.Where(user => userIds.Contains(user.Id)).ToList();
+        }
     }
 }

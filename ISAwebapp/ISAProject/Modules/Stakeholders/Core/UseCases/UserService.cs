@@ -31,6 +31,12 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             return _userRepository.Exists(email);
         }
 
+        public Result<List<UserDto>> GetUsersByIds(List<long> userIds)
+        {
+            var foundUsers = _userRepository.GetUsersByIds(userIds);
+            return UserConverter.ConvertToDto(foundUsers);
+        }
+
         public Result<CompanyAdminDto> GetCompanyAdmin(int companyAdminId)
         {
             var admin = _companyAdminsRepository.GetCompanyAdmin(companyAdminId);

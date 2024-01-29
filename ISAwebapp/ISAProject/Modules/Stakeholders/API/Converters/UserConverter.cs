@@ -41,5 +41,14 @@ namespace ISAProject.Modules.Stakeholders.API.Converters
                 userDto.IsActivated
             );
         }
+
+        public static List<UserDto> ConvertToDto(List<User> users)
+        {
+            return users.Select(ConvertToDto).ToList();
+        }
+        public static List<User> ConvertToDomain(List<UserDto> users)
+        {
+            return users.Select(ConvertToDomain).ToList();
+        }
     }
 }
