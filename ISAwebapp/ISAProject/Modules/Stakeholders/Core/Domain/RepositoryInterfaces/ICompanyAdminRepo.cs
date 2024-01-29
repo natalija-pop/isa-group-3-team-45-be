@@ -4,6 +4,6 @@
     {
         CompanyAdmin Create(CompanyAdmin companyAdmin);
         List<CompanyAdmin> GetCompanyAdmins(long companyId);
-        
+        CompanyAdmin GetCompanyAdmin(long companyAdminId);
     }
 }

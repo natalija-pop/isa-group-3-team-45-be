@@ -8,6 +8,7 @@ namespace ISAProject.Modules.Stakeholders.API.Public
     {
         Result<UserDto> Create(UserDto userDto);
         Result<UserDto> Get(int id);
+        Result<CompanyAdminDto> GetCompanyAdmin(int companyAdminId);
         Result<UserDto> Update(UserDto userDto);
         Result Delete(int id);
         Result<PagedResult<UserDto>> GetPaged(int page, int pageSize);
