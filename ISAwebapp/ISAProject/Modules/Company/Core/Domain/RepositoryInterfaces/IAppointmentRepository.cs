@@ -4,7 +4,6 @@ namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
 {
     public interface IAppointmentRepository
     {
-        Appointment GetById(long id, DatabaseContext dbContext);
         Appointment Get(long id);
         List<Appointment> GetAll();
         Appointment Create(Appointment appointment);
@@ -12,7 +11,10 @@ namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
         Company GetAppointmentsCompany(long companyId);
         List<Appointment> GetCompanyAppointments(long companyId);
         List<Appointment> GetCustomerAppointments(long customerId);
-
         List<Equipment> GetWithIds(List<int> desiredEquipmentIds);
+
+        
+        Appointment GetById(long id, DatabaseContext dbContext);
+        bool IsTimeSlotAvailable(DateTime start, int duration, long companyId, DatabaseContext dbContext);
     }
 }

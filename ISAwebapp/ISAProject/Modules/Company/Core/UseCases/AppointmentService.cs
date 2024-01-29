@@ -25,12 +25,30 @@ namespace ISAProject.Modules.Company.Core.UseCases
         }
         public Result<AppointmentDto> Create(AppointmentDto appointmentDto)
         {
-            var result = _repository.Create(MapToDomain(appointmentDto));
+            var appointment = MapToDomain(appointmentDto);
+            using var transaction = _dbContext.Database.BeginTransaction();
+            try
+            {
+                var isTimeSlotAvailable = _repository.IsTimeSlotAvailable(appointment.Start, appointment.Duration, appointment.CompanyId, _dbContext);
+                if (!isTimeSlotAvailable)
+                {
+                    transaction.Rollback();
+                    return Result.Fail(FailureCode.NotFound).WithError("Error! Not available time slot for appointment");
+                }
 
-            return MapToDto(result);
+                _dbContext.Appointments.Add(appointment);
+                _dbContext.SaveChanges();
+                transaction.Commit();
+                return MapToDto(appointment);
+            }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                return Result.Fail(FailureCode.Internal).WithError($"An error occurred: {e.Message}");
+            }
         }
 
-        public Result<AppointmentDto> CreateNewAppointment(AppointmentDto appointmentDto)
+        public Result<AppointmentDto> ReserveScheduledAppointment(AppointmentDto appointmentDto)
         {
             var equipmentDtos = appointmentDto.Equipment;
             var equipmentIds = equipmentDtos.Select(e => e.Id).ToList();

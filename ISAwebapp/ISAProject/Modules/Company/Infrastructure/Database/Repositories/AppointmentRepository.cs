@@ -25,6 +25,12 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
             return dbContext.Appointments.Find(id);
         }
 
+        public bool IsTimeSlotAvailable(DateTime start, int duration, long companyId, DatabaseContext dbContext)
+        {
+            var availableTimeSlots =  dbContext.Appointments.Where(a => a.CompanyId != companyId && !(start.AddMinutes(duration) < a.Start) && !(start > a.Start.AddMinutes(duration))).ToList();
+            return !availableTimeSlots.Any();
+        }
+
         public Appointment Get(long id)
         {
             var appointment = _context.Appointments.Find(id);

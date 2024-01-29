@@ -24,7 +24,7 @@ namespace ISAProject.Modules.Company.API.Public
         public bool IsAppointmentValid(DateTime selectedDate, int companyId, string adminName, string adminSurname);
         public bool IsEquipmentReserved(int equipmentId);
 
-        Result<AppointmentDto> CreateNewAppointment(AppointmentDto appointmentDto);
+        Result<AppointmentDto> ReserveScheduledAppointment(AppointmentDto appointmentDto);
 
         List<string> RetrieveBarcodeImageData(string userId);
     }

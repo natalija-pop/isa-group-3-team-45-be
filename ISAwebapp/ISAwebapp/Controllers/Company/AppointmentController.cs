@@ -30,7 +30,7 @@ namespace API.Controllers.Company
         public ActionResult<AppointmentDto> CreateAdditionalAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
             _emailService.SendAppointmentConfirmation(appointmentDto, userEmail);
-            var result = _appointmentService.CreateNewAppointment(appointmentDto);
+            var result = _appointmentService.ReserveScheduledAppointment(appointmentDto);
             return CreateResponse(result);
         }
 
