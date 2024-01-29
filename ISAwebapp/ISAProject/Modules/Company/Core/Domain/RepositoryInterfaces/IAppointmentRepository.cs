@@ -11,5 +11,9 @@
         List<Appointment> GetCustomerAppointments(long customerId);
 
         List<Equipment> GetWithIds(List<int> desiredEquipmentIds);
+        List<Appointment> GetCustomerProcessedAppointments(long customerId);
+        List<Appointment> GetCustomerScheduledAppointments(long customerId);
+
+
     }
 }

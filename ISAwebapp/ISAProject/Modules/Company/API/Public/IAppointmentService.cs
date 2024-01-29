@@ -27,6 +27,8 @@ namespace ISAProject.Modules.Company.API.Public
         public bool IsEquipmentReserved(int equipmentId);
 
         Result<AppointmentDto> CreateNewAppointment(AppointmentDto appointmentDto);
+        Result<List<AppointmentDto>> GetCustomerProcessedAppointments(int customerId);
+        Result<List<AppointmentDto>> GetCustomerScheduledAppointments(int customerId);
 
         List<string> RetrieveBarcodeImageData(string userId);
     }
