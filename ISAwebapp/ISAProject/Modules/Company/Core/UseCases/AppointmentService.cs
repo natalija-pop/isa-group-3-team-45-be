@@ -23,7 +23,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
             _companyAdminRepo = companyRepo;
             _dbContext = dbContext;
         }
-        public Result<AppointmentDto> Create(AppointmentDto appointmentDto)
+        public Result<AppointmentDto> CreatePredefinedAppointment(AppointmentDto appointmentDto)
         {
             var appointment = MapToDomain(appointmentDto);
             using var transaction = _dbContext.Database.BeginTransaction();
@@ -50,41 +50,41 @@ namespace ISAProject.Modules.Company.Core.UseCases
 
         public Result<AppointmentDto> ReserveScheduledAppointment(AppointmentDto appointmentDto)
         {
+            var appointment = MapToDomain(appointmentDto);
             var equipmentDtos = appointmentDto.Equipment;
             var equipmentIds = equipmentDtos.Select(e => e.Id).ToList();
 
-            var existingEquipment = _repository.GetWithIds(equipmentIds);
-            var appointment = MapToDomain(appointmentDto);
-            appointment.Equipment = existingEquipment;
-            foreach (var eq in appointment.Equipment)
-            {
-                eq.ReservedQuantity += 1;
-            }
-            return MapToDto(_repository.Create(appointment));
-        }
-
-        public Result<AppointmentDto> Get(int id)
-        {
-            var encounter = _repository.Get(id);
-            return MapToDto(encounter);
-
-        }
-        public Result<AppointmentDto> Update(AppointmentDto appointmentDto)
-        {
+            using var transaction = _dbContext.Database.BeginTransaction();
             try
             {
-                var result = _repository.Update(MapToDomain(appointmentDto));
-                return MapToDto(result);
+                var isTimeSlotAvailable = _repository.IsTimeSlotAvailable(appointment.Start, appointment.Duration, appointment.CompanyId, _dbContext);
+                if (!isTimeSlotAvailable)
+                {
+                    transaction.Rollback();
+                    return Result.Fail(FailureCode.NotFound).WithError("Error! Not available time slot for appointment");
+                }
+                var existingEquipment = _repository.GetWithIds(equipmentIds);
+                appointment.Equipment = existingEquipment;
+                foreach (var equipment in appointment.Equipment)
+                {
+                    _dbContext.Entry(equipment).Reload();
+                    if (equipment.Quantity <= 0)
+                    {
+                        transaction.Rollback();
+                        return Result.Fail(FailureCode.InsufficientData);
+                    }
+                    equipment.ReservedQuantity++;
+                }
+                _dbContext.Appointments.Add(appointment);
+                _dbContext.SaveChanges();
+                transaction.Commit();
+                return MapToDto(appointment);
             }
-            catch (KeyNotFoundException e)
+            catch (Exception e)
             {
-                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+                transaction.Rollback();
+                return Result.Fail(FailureCode.Internal).WithError($"An error occurred: {e.Message}");
             }
-            catch (ArgumentException e)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
-            }
-
         }
 
         public Result<AppointmentDto> ReserveAppointment(AppointmentDto appointmentDto)
@@ -135,6 +135,13 @@ namespace ISAProject.Modules.Company.Core.UseCases
             }
         }
 
+        public Result<AppointmentDto> Get(int id)
+        {
+            var encounter = _repository.Get(id);
+            return MapToDto(encounter);
+
+        }
+        
         public Result<List<AppointmentDto>> GetAll()
         {
             var appointments = _repository.GetAll();
@@ -147,34 +154,22 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return company;
         }
 
-        private List<Appointment> GenerateAppointmentsForAllDay(DateTime selectedDate, Core.Domain.Company company, List<CompanyAdmin> administrators)
+        public Result<AppointmentDto> Update(AppointmentDto appointmentDto)
         {
-            DateTime currentTime = selectedDate.Date.Add(company.WorkingHours.OpeningHours);
-            DateTime endTime = selectedDate.Date.Add(company.WorkingHours.ClosingHours);
-
-            var recommendedAppointments = new List<Appointment>();
-
-            while (currentTime.AddMinutes(60) <= endTime)
+            try
             {
-                User availableAdmin = administrators.FirstOrDefault();
-                if (availableAdmin != null)
-                {
-                    var recommendedAppointment = new Appointment
-                    {
-                        Start = currentTime,
-                        AdminName = availableAdmin.Name,
-                        AdminSurname = availableAdmin.Surname,
-                        CustomerName = "",
-                        CustomerSurname = "",
-                        CompanyId = company.Id,
-                    };
-
-                    recommendedAppointments.Add(recommendedAppointment);
-                }
-
-                currentTime = currentTime.AddMinutes(60);
+                var result = _repository.Update(MapToDomain(appointmentDto));
+                return MapToDto(result);
             }
-            return recommendedAppointments;
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+
         }
 
         public Result<List<Appointment>> GenerateRecommendedAppointments(DateTime selectedDate, int companyId)
@@ -228,33 +223,6 @@ namespace ISAProject.Modules.Company.Core.UseCases
             }
 
             return recommendedAppointments;
-        }
-
-        private User FindAvailableAdministrator(List <CompanyAdmin> administrators, List<AppointmentDto> existingAppointments, DateTime currentTime)
-        {
-            foreach (var admin in administrators)
-            {
-                bool hasAppointment = false;
-
-                foreach(var appointment in existingAppointments)
-                {
-                    if (appointment.Start.Ticks <= currentTime.Ticks && 
-                        appointment.Start.AddMinutes(appointment.Duration) > currentTime &&
-                        appointment.AdminName == admin.Name &&
-                        appointment.AdminSurname == admin.Surname)
-                    {
-                        hasAppointment = true;
-                        break;
-                    }
-                }
-
-                if (!hasAppointment)
-                {
-                    return admin;
-                }
-
-            }
-            return null;
         }
 
         public bool IsAppointmentValid (DateTime selectedDate, int companyId, string adminName, string adminSurname)
@@ -316,6 +284,63 @@ namespace ISAProject.Modules.Company.Core.UseCases
                 base64ImageStrings.Add(base64ImageString);
             }
             return base64ImageStrings;
+        }
+
+        private List<Appointment> GenerateAppointmentsForAllDay(DateTime selectedDate, Core.Domain.Company company, List<CompanyAdmin> administrators)
+        {
+            DateTime currentTime = selectedDate.Date.Add(company.WorkingHours.OpeningHours);
+            DateTime endTime = selectedDate.Date.Add(company.WorkingHours.ClosingHours);
+
+            var recommendedAppointments = new List<Appointment>();
+
+            while (currentTime.AddMinutes(60) <= endTime)
+            {
+                User availableAdmin = administrators.FirstOrDefault();
+                if (availableAdmin != null)
+                {
+                    var recommendedAppointment = new Appointment
+                    {
+                        Start = currentTime,
+                        AdminName = availableAdmin.Name,
+                        AdminSurname = availableAdmin.Surname,
+                        CustomerName = "",
+                        CustomerSurname = "",
+                        CompanyId = company.Id,
+                    };
+
+                    recommendedAppointments.Add(recommendedAppointment);
+                }
+
+                currentTime = currentTime.AddMinutes(60);
+            }
+            return recommendedAppointments;
+        }
+
+        private User FindAvailableAdministrator(List<CompanyAdmin> administrators, List<AppointmentDto> existingAppointments, DateTime currentTime)
+        {
+            foreach (var admin in administrators)
+            {
+                bool hasAppointment = false;
+
+                foreach (var appointment in existingAppointments)
+                {
+                    if (appointment.Start.Ticks <= currentTime.Ticks &&
+                        appointment.Start.AddMinutes(appointment.Duration) > currentTime &&
+                        appointment.AdminName == admin.Name &&
+                        appointment.AdminSurname == admin.Surname)
+                    {
+                        hasAppointment = true;
+                        break;
+                    }
+                }
+
+                if (!hasAppointment)
+                {
+                    return admin;
+                }
+
+            }
+            return null;
         }
     }
 }

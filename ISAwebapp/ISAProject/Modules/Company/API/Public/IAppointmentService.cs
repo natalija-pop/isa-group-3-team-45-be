@@ -12,7 +12,7 @@ namespace ISAProject.Modules.Company.API.Public
 {
     public interface IAppointmentService
     {
-        Result<AppointmentDto> Create(AppointmentDto appointmentDto);
+        Result<AppointmentDto> CreatePredefinedAppointment(AppointmentDto appointmentDto);
         Result<AppointmentDto> Get(int id);
         Result<AppointmentDto> Update(AppointmentDto appointmentDto);
         Result<AppointmentDto> ReserveAppointment(AppointmentDto appointmentDto);

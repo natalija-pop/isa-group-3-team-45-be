@@ -22,7 +22,7 @@ namespace API.Controllers.Company
         [HttpPost]
         public ActionResult<AppointmentDto> Create([FromBody] AppointmentDto appointmentDto)
         {
-            var result = _appointmentService.Create(appointmentDto);
+            var result = _appointmentService.CreatePredefinedAppointment(appointmentDto);
             return CreateResponse(result);
         }
 
