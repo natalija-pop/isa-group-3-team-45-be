@@ -110,6 +110,49 @@ namespace ISAProject.Modules.Company.Core.UseCases
                     appointment.CustomerName = appointmentDto.CustomerName;
                     appointment.CustomerSurname = appointmentDto.CustomerSurname;
 
+        }
+
+        public Result<AppointmentDto> ReserveAppointment(AppointmentDto appointmentDto)
+        {
+            try
+            {
+                foreach (var eq in appointmentDto.Equipment)
+                {
+                    eq.ReservedQuantity += 1;
+                }
+                var result = _repository.Update(MapToDomain(appointmentDto));
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+
+        }
+
+        public Result<AppointmentDto> MarkAppointmentAsProcessed(AppointmentDto appointmentDto)
+        {
+            appointmentDto.Equipment.Clear();
+            try
+            {
+                var result = _repository.Update(MapToDomain(appointmentDto));
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+
+        }
+
                     var existingEquipment = _repository.GetWithIds(equipmentIds);
                     appointment.Equipment = existingEquipment;
                     foreach (var equipment in appointment.Equipment)
@@ -208,6 +251,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
                         var recommendedAppointment = new Appointment
                         {
                             Start = currentTime,
+                            AdminId = availableAdmin.Id,
                             AdminName = availableAdmin.Name,
                             AdminSurname = availableAdmin.Surname,
                             CustomerName = "",

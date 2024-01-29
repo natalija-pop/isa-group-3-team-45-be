@@ -24,5 +24,11 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
             var companyAdmins = _dbContext.CompanyAdmins.ToList();
             return companyAdmins.FindAll(x => x.CompanyId == companyId);
         }
+
+        public CompanyAdmin GetCompanyAdmin(long companyAdminId)
+        {
+            var companyAdmin = _dbContext.CompanyAdmins.FirstOrDefault(x => x.Id == companyAdminId);
+            return companyAdmin;
+        }
     }
 }

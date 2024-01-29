@@ -90,6 +90,14 @@ namespace API.Controllers.Company
             return CreateResponse(_appointmentService.ReserveAppointment(appointmentDto));
         }
 
+        [HttpPut("markAppointmentAsProcessed")]
+        public ActionResult<AppointmentDto> MarkAppointmentAsProcessed([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
+        {
+            _emailService.SendProcessedAppointmentConfirmation(appointmentDto, userEmail);
+            _equipmentService.UpdateProcessed(appointmentDto.Equipment);
+            return CreateResponse(_appointmentService.MarkAppointmentAsProcessed(appointmentDto));
+        }
+
         [HttpGet("checkIfEquipmentIsReserved/{equipmentId:int}")]
         public ActionResult IsEquipmentReserved([FromRoute] int equipmentId)
         {
