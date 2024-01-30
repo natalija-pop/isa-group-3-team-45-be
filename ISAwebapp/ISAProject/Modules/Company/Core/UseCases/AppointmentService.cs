@@ -304,6 +304,20 @@ namespace ISAProject.Modules.Company.Core.UseCases
 
         }
 
+        public bool IsReservationEnabled(long appointmentId, int u)
+        {
+            var newAppointment = Get((int)appointmentId).Value;
+            var existingAppointments = GetCustomerAppointments(u);
+
+            if (existingAppointments.Value.Any(appointment =>
+                    appointment.CompanyId == newAppointment.CompanyId && appointment.Start == newAppointment.Start))
+            {
+                return false;
+            }
+            return true;
+        }
+
+
         public List<string> RetrieveBarcodeImageData(string userId)
         {
             string barcodeFolderPath = "BarCodes";

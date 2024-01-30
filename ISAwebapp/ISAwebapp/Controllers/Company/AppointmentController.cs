@@ -130,6 +130,14 @@ namespace API.Controllers.Company
             return Ok(isEquipmentReserved);
         }
 
+        [HttpGet("checkIfSameAppintment/{appointmentId:int}")]
+        public ActionResult IsSameAppointment([FromRoute] int appointmentId, [FromQuery] int userId)
+        {
+            bool isSameAppointment = _appointmentService.IsReservationEnabled(appointmentId, userId);
+
+            return Ok(isSameAppointment);
+        }
+
         [HttpGet("barcode/{userId:int}")]
         public IActionResult GetBarcodeImage([FromRoute] int userId)
         {
