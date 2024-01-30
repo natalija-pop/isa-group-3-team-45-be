@@ -33,7 +33,7 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
 
         public List<Appointment> GetReservedByCompanyAdmin(int companyAdminId)
         {
-            return _context.Appointments.Where(a => a.AdminId == (long)companyAdminId && a.CustomerId != 0).ToList();
+            return _context.Appointments.Where(a => a.AdminId == (long)companyAdminId && (a.CustomerId != 0 || a.CustomerId != null)).ToList();
         }
 
         public Appointment Get(long id)

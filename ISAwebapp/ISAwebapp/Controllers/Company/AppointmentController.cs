@@ -1,6 +1,4 @@
-﻿using ISAProject.Configuration.Core.UseCases;
-using ISAProject.Modules.Company.API;
-using ISAProject.Modules.Company.API.Dtos;
+﻿using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +10,14 @@ namespace API.Controllers.Company
         private readonly IAppointmentService _appointmentService;
         private readonly IEmailService _emailService;
         private readonly IUserService _userService;
+        private readonly IEquipmentService _equipmentService;
 
-        public AppointmentController(IAppointmentService service, IEmailService emailService, IUserService userService)
+        public AppointmentController(IAppointmentService service, IEmailService emailService, IUserService userService, IEquipmentService equipmentService)
         {
             _appointmentService = service;
             _emailService = emailService;
             _userService = userService;
+            _equipmentService = equipmentService;
         }
         
         [HttpPost]

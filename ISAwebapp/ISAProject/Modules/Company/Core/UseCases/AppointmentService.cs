@@ -353,7 +353,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
         public Result<List<AppointmentDto>> GetReservedByCompanyAdmin(int companyAdminId)
         {
             var appointments = _repository.GetReservedByCompanyAdmin(companyAdminId);
-            if (appointments.Count <= 0) throw new ArgumentOutOfRangeException("Exception! No Appointments by this Admin!");
+            if (appointments.Count <= 0) throw new ArgumentOutOfRangeException("Exception! No reserved Appointments by this Admin!");
             appointments.ForEach(appointment =>
             {
                 if (appointment.IsExpired()) GivePenaltyPoints(appointment);
