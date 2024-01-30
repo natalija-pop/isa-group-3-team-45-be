@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using ISAProject.Configuration.Core.UseCases;
 using ISAProject.Modules.Stakeholders.API.Dtos;
+using ISAProject.Modules.Stakeholders.Core.Domain;
 
 namespace ISAProject.Modules.Stakeholders.API.Public
 {
@@ -15,6 +16,9 @@ namespace ISAProject.Modules.Stakeholders.API.Public
         Result<PagedResult<UserDto>> GetPaged(int page, int pageSize);
         Result<bool> ChangePassword(PasswordChangeDto passwordChange);
         Result<List<UserDto>> GetUsersByIds(List<long> userIds);
-        Task ClearPenaltyPointsForAllUsers();
+        bool HasDeletionPenaltyInCurrentMonth(long userId, DateTime todaysDate);
+
+        Result<User> ClearPenaltyPointsForUser(int userId);
+
     }
 }

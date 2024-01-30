@@ -63,5 +63,25 @@ namespace API.Controllers.Stakeholders
         {
             return CreateResponse(_userService.ChangePassword(passwordChangeDto));
         }
+        [HttpGet("deletion-penalty/{userId:int}")]
+        public IActionResult HasDeletionPenaltyInCurrentMonth([FromRoute] int userId)
+        {
+            var hasPenalty = _userService.HasDeletionPenaltyInCurrentMonth(userId, DateTime.Today);
+            return Ok(hasPenalty);
+        }
+        [HttpPost("clear-penalty-points/{userId}")]
+        public IActionResult ClearPenaltyPoints([FromRoute] int userId)
+        {
+            var result = _userService.ClearPenaltyPointsForUser(userId);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value); 
+            }
+            else
+            {
+                return BadRequest(result.Errors);
+            }
+        }
     }
 }
