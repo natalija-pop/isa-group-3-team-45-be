@@ -1,4 +1,6 @@
-﻿using ISAProject.Modules.Company.API.Dtos;
+﻿using ISAProject.Configuration.Core.UseCases;
+using ISAProject.Modules.Company.API;
+using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +11,13 @@ namespace API.Controllers.Company
     { 
         private readonly IAppointmentService _appointmentService;
         private readonly IEmailService _emailService;
+        private readonly IUserService _userService;
 
-        public AppointmentController(IAppointmentService service, IEmailService emailService)
+        public AppointmentController(IAppointmentService service, IEmailService emailService, IUserService userService)
         {
             _appointmentService = service;
             _emailService = emailService;
+            _userService = userService;
         }
         
         [HttpPost]
@@ -86,12 +90,32 @@ namespace API.Controllers.Company
             return CreateResponse(_appointmentService.GetCustomerAppointments(customerId));
         }
 
+        [HttpGet("getCustomerProcessedAppointments/{customerId:int}")]
+        public ActionResult<AppointmentDto> GetCustomerProcessedAppointments([FromRoute] int customerId)
+        {
+            return CreateResponse(_appointmentService.GetCustomerProcessedAppointments(customerId));
+        }
+
+        [HttpGet("getCustomerScheduledAppointments/{customerId:int}")]
+        public ActionResult<AppointmentDto> GetCustomerScheduledAppointments([FromRoute] int customerId)
+        {
+            return CreateResponse(_appointmentService.GetCustomerScheduledAppointments(customerId));
+        }
+
         [HttpPut("reserveAppointment")]
         public ActionResult<AppointmentDto> ReserveAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
             var result = _appointmentService.ReserveAppointment(appointmentDto);
             if(result.IsSuccess) _emailService.SendAppointmentConfirmation(result.Value, userEmail);
             return CreateResponse(result);
+        }
+        
+        [HttpPut("cancelAppointment")]
+        public ActionResult<AppointmentDto> CancelAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] long userId)
+        {
+            _equipmentService.UpdateCanceled(appointmentDto.Equipment);
+            _userService.AddCancelationPenalty(userId, appointmentDto.Start);
+            return CreateResponse(_appointmentService.CancelAppointment(appointmentDto));
         }
 
         [HttpPut("markAppointmentAsProcessed")]
@@ -110,6 +134,13 @@ namespace API.Controllers.Company
             return Ok(isEquipmentReserved);
         }
 
+        [HttpGet("checkIfSameAppintment/{appointmentId:int}")]
+        public ActionResult IsSameAppointment([FromRoute] int appointmentId, [FromQuery] int userId)
+        {
+            bool isSameAppointment = _appointmentService.IsReservationEnabled(appointmentId, userId);
+            return Ok(isSameAppointment);
+        }
+
         [HttpGet("barcode/{userId:int}")]
         public IActionResult GetBarcodeImage([FromRoute] int userId)
         {
@@ -120,10 +151,7 @@ namespace API.Controllers.Company
         [HttpPost("barcode/read")]
         public ActionResult<AppointmentDto> ReadQrCode([FromForm] IFormFile qrCodeFile)
         {
-            if(qrCodeFile.Length == 0)
-            {
-                return BadRequest("No file provided");
-            }
+            if(qrCodeFile.Length == 0) return BadRequest("No file provided");
             return CreateResponse(_appointmentService.ReadAppointmentQrCode(qrCodeFile.OpenReadStream()));
         }
     }

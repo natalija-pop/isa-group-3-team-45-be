@@ -9,6 +9,7 @@ namespace ISAProject.Modules.Company.API.Public
         Result<EquipmentDto> Get(int id);
         Result<EquipmentDto> Create(EquipmentDto equipmentDto);
         Result<EquipmentDto> Update(EquipmentDto equipmentDto);
+        void UpdateCanceled(ICollection<EquipmentDto>? toUpdate);
         Result Delete(int id);
         Result<PagedResult<EquipmentDto>> GetPaged(int page, int pageSize);
         Result<List<EquipmentDto>> Search(string searchKeyword);

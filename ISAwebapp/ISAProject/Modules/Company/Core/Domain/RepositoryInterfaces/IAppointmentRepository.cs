@@ -11,11 +11,12 @@ namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
         Company GetAppointmentsCompany(long companyId);
         List<Appointment> GetCompanyAppointments(long companyId);
         List<Appointment> GetCustomerAppointments(long customerId);
-        List<Equipment> GetWithIds(List<int> desiredEquipmentIds);
+        List<Appointment> GetReservedByCompanyAdmin(int companyAdminId);
+        List<Appointment> GetCustomerProcessedAppointments(long customerId);
+        List<Appointment> GetCustomerScheduledAppointments(long customerId);
 
-        
         Appointment GetById(long id, DatabaseContext dbContext);
         bool IsTimeSlotAvailable(DateTime start, int duration, long companyId, DatabaseContext dbContext);
-        List<Appointment> GetReservedByCompanyAdmin(int companyAdminId);
+        List<Equipment> GetWithIds(List<int> desiredEquipmentIds);
     }
 }

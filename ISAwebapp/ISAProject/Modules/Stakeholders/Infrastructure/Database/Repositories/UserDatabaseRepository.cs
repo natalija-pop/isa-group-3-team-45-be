@@ -30,11 +30,6 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
             return _dbContext.Users.FirstOrDefault(user => user.Email == email && user.IsActivated);
         }
 
-        public List<User> GetAll()
-        {
-            return _dbContext.Users.ToList();
-        }
-
         public User GetById(long? appointmentCustomerId)
         {
             return _dbContext.Users.FirstOrDefault(user => user.Id == appointmentCustomerId && user.IsActivated);
@@ -53,5 +48,16 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
             }
             return user;
         }
+
+        public List<User> GetUsersByIds(List<long> userIds)
+        {
+            return _dbContext.Users.Where(user => userIds.Contains(user.Id)).ToList();
+        }
+
+        public List<User> GetAll()
+        {
+            return _dbContext.Users.ToList();
+        }
+
     }
 }

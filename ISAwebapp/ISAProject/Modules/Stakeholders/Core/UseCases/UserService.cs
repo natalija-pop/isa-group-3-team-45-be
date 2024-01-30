@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.Eventing.Reader;
+using AutoMapper;
 using FluentResults;
 using ISAProject.Configuration.Core.UseCases;
 using ISAProject.Modules.Stakeholders.API.Converters;
@@ -28,6 +29,12 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
         public bool Exists(string email)
         {
             return _userRepository.Exists(email);
+        }
+
+        public Result<List<UserDto>> GetUsersByIds(List<long> userIds)
+        {
+            var foundUsers = _userRepository.GetUsersByIds(userIds);
+            return UserConverter.ConvertToDto(foundUsers);
         }
 
         public Result<CompanyAdminDto> GetCompanyAdmin(int companyAdminId)
@@ -66,5 +73,20 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             }
         }
 
+        public void AddCancelationPenalty(long? userId, DateTime s)
+        {
+            var user = CrudRepository.Get(userId.GetValueOrDefault());
+
+            if (s - DateTime.Now > TimeSpan.FromHours(24))
+            {
+                user.PenaltyPoints += 1;
+            }
+            else
+            {
+                user.PenaltyPoints += 2;
+            }
+
+            CrudRepository.Update(user);
+        }
     }
 }

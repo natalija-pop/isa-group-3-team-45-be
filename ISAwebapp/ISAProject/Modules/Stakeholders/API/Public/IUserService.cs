@@ -10,9 +10,11 @@ namespace ISAProject.Modules.Stakeholders.API.Public
         Result<UserDto> Get(int id);
         Result<CompanyAdminDto> GetCompanyAdmin(int companyAdminId);
         Result<UserDto> Update(UserDto userDto);
+        void AddCancelationPenalty(long? userId, DateTime start);
         Result Delete(int id);
         Result<PagedResult<UserDto>> GetPaged(int page, int pageSize);
         Result<bool> ChangePassword(PasswordChangeDto passwordChange);
+        Result<List<UserDto>> GetUsersByIds(List<long> userIds);
         Task ClearPenaltyPointsForAllUsers();
     }
 }

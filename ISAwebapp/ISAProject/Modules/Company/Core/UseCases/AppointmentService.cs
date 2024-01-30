@@ -138,6 +138,29 @@ namespace ISAProject.Modules.Company.Core.UseCases
             }
         }
 
+        public Result<AppointmentDto> CancelAppointment(AppointmentDto appointmentDto)
+        {
+            try
+            {
+                var app = _repository.Get(appointmentDto.Id);
+                app.CustomerId = null;
+                app.CustomerName = null;
+                app.CustomerSurname = null;
+                app.Status = Appointment.AppointmentStatus.Predefined;
+                app.Equipment.Clear();
+                return MapToDto(_repository.Update(app));
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+
         public Result<AppointmentDto> MarkAppointmentAsProcessed(AppointmentDto appointmentDto)
         {
             var appointment = _repository.Get(appointmentDto.Id);
@@ -267,6 +290,17 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return MapToDto(appointments);
         }
 
+        public Result<List<AppointmentDto>> GetCustomerScheduledAppointments(int customerId)
+        {
+            var appointments = _repository.GetCustomerScheduledAppointments(customerId);
+            return MapToDto(appointments);
+        }
+        public Result<List<AppointmentDto>> GetCustomerProcessedAppointments(int customerId)
+        {
+            var appointments = _repository.GetCustomerProcessedAppointments(customerId);
+            return MapToDto(appointments);
+        }
+
         public bool IsEquipmentReserved(int equipmentId)
         {
             var allAppointments = GetAll().Value;
@@ -279,6 +313,20 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return canEquipmentBeDeleted;
 
         }
+
+        public bool IsReservationEnabled(long appointmentId, int u)
+        {
+            var newAppointment = Get((int)appointmentId).Value;
+            var existingAppointments = GetCustomerAppointments(u);
+
+            if (existingAppointments.Value.Any(appointment =>
+                    appointment.CompanyId == newAppointment.CompanyId && appointment.Start == newAppointment.Start))
+            {
+                return false;
+            }
+            return true;
+        }
+
 
         public List<string> RetrieveBarcodeImageData(string userId)
         {

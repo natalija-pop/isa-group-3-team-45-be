@@ -83,5 +83,15 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
         {
             return GetAll().FindAll(x => x.CustomerId == customerId );
         }
+
+        public List<Appointment> GetCustomerScheduledAppointments(long customerId)
+        {
+            return GetAll().FindAll(x => x.CustomerId == customerId && x.Status == Appointment.AppointmentStatus.Scheduled);
+        }
+
+        public List<Appointment> GetCustomerProcessedAppointments(long customerId)
+        {
+            return GetAll().FindAll(x => x.CustomerId == customerId && x.Status == Appointment.AppointmentStatus.Processed);
+        }
     }
 }

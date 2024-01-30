@@ -29,6 +29,18 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return MapToDto(filteredResult);
         }
 
+        public void UpdateCanceled(ICollection<EquipmentDto>? toUpdate)
+        {
+            if (toUpdate != null)
+            {
+                foreach (var eq in toUpdate)
+                {
+                    eq.ReservedQuantity -= 1;
+                    Update(eq);
+                }
+            }
+        }
+
         public void UpdateProcessed(ICollection<EquipmentDto>? processedEquipment)
         {
             if (processedEquipment != null)
