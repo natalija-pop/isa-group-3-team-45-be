@@ -58,6 +58,20 @@ namespace ISAProject.Modules.Stakeholders.Infrastructure.Database.Repositories
         {
             return _dbContext.Users.ToList();
         }
+        public User FindUserById(long userId)
+        {
+            return _dbContext.Users.FirstOrDefault(user => user.Id == userId);
+        }
+        public bool HasDeletionPenaltyInCurrentMonth(long userId, DateTime todaysDate)
+        {
+            var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return false;
+            }
+
+            return user.DeletionPenaltyDate.Month == todaysDate.Month;
+        }
 
     }
 }

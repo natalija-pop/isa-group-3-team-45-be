@@ -57,20 +57,13 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             return true;
         }
 
-        public async Task ClearPenaltyPointsForAllUsers()
+        public Result<User> ClearPenaltyPointsForUser(int userId)
         {
-            DateTime currentDate = DateTime.Now;
-
-            if (currentDate.Day == 1)
-            {
-                var users = _userRepository.GetAll();
-
-                foreach (var user in users)
-                {
-                    user.PenaltyPoints = 0;
-                    CrudRepository.Update(user);
-                }
-            }
+            var foundUser = _userRepository.FindUserById(userId);
+            foundUser.PenaltyPoints = 0;
+            foundUser.DeletionPenaltyDate = DateTime.UtcNow;
+            CrudRepository.Update(foundUser);
+            return foundUser;
         }
 
         public void AddCancelationPenalty(long? userId, DateTime s)
@@ -87,6 +80,11 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
             }
 
             CrudRepository.Update(user);
+        }
+
+        public bool HasDeletionPenaltyInCurrentMonth(long userId, DateTime todaysDate)
+        {
+            return _userRepository.HasDeletionPenaltyInCurrentMonth(userId, todaysDate);
         }
     }
 }
