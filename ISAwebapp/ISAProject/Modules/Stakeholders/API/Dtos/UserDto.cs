@@ -12,5 +12,7 @@ namespace ISAProject.Modules.Stakeholders.API.Dtos
         public UserRole Role { get; set; }
         public bool IsActivated { get; set; }
         public int PenaltyPoints {  get; set; }
+        public DateTime DeletionPenaltyDate { get; set; }
+
     }
 }

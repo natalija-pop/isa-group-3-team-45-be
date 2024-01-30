@@ -9,5 +9,8 @@
         User Update(User user);
         List<User> GetAll();
         List<User> GetUsersByIds(List<long> userIds);
+        bool HasDeletionPenaltyInCurrentMonth(long userId, DateTime todaysDate);
+        User FindUserById(long userId);
+
     }
 }

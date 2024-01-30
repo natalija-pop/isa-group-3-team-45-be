@@ -12,6 +12,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
         public bool IsActivated { get; private set; } = false;
         public bool ForcePasswordReset { get; private set; } 
         public int PenaltyPoints { get;  set; }
+        public DateTime DeletionPenaltyDate { get;  set; }
 
         public User() {}
 
@@ -24,6 +25,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
             Role = role;
             IsActivated = isActivated;
             PenaltyPoints = 0;
+            DeletionPenaltyDate = DateTime.Now;
             ForcePasswordReset = (role == UserRole.SystemAdministrator || role == UserRole.CompanyAdministrator);
             Validate();
         }
