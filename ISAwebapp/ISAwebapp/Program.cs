@@ -1,4 +1,6 @@
+using API.Controllers.Simulators.QueueParticipants;
 using API.Startup;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,7 @@ builder.Services.ConfigureSwagger(builder.Configuration);
 const string corsPolicy = "_corsPolicy";
 builder.Services.ConfigureCors(corsPolicy);
 builder.Services.ConfigureAuth();
+builder.Services.ConfigureRabbitMq();
 
 builder.Services.RegisterModules();
 
@@ -32,4 +35,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+var factory = new ConnectionFactory
+{
+    HostName = "localhost",
+    Port = 5672,
+    UserName = "natalija",
+    Password = "natalija123",
+    VirtualHost = "ISA simulator"
+};
+using var connection = factory.CreateConnection();
+using var channel = connection.CreateModel();
+QueueConsumer.ReceiveNewPosition(channel);    
+QueueConsumer.StopSimulation(channel);
 app.Run();
