@@ -1,41 +1,44 @@
-﻿using ISAProject.Configuration.Core.UseCases;
-using ISAProject.Modules.Company.API;
-using ISAProject.Modules.Company.API.Dtos;
+﻿using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
-
 namespace API.Controllers.Company
 {
     [Route("api/appointment")]
     public class AppointmentController : BaseApiController
     { 
         private readonly IAppointmentService _appointmentService;
-        private readonly IEquipmentService _equipmentService;
         private readonly IEmailService _emailService;
         private readonly IUserService _userService;
+        private readonly IEquipmentService _equipmentService;
 
-        public AppointmentController(IAppointmentService service, IEquipmentService equipmentService, IEmailService emailService, IUserService userService)
+        public AppointmentController(IAppointmentService service, IEmailService emailService, IUserService userService, IEquipmentService equipmentService)
         {
             _appointmentService = service;
-            _equipmentService = equipmentService;
             _emailService = emailService;
             _userService = userService;
+            _equipmentService = equipmentService;
         }
         
         [HttpPost]
         public ActionResult<AppointmentDto> Create([FromBody] AppointmentDto appointmentDto)
         {
-            var result = _appointmentService.Create(appointmentDto);
+            var result = _appointmentService.CreatePredefinedAppointment(appointmentDto);
             return CreateResponse(result);
         }
 
         [HttpPost("additionalAppointment")]
         public ActionResult<AppointmentDto> CreateAdditionalAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
-            _emailService.SendAppointmentConfirmation(appointmentDto, userEmail);
-            var result = _appointmentService.CreateNewAppointment(appointmentDto);
+            var result = _appointmentService.ReserveScheduledAppointment(appointmentDto);
+            if(result.IsSuccess) _emailService.SendAppointmentConfirmation(result.Value, userEmail);
             return CreateResponse(result);
+        }
+
+        [HttpGet("getReservedByCompanyAdmin/{companyAdminId:int}")]
+        public ActionResult<AppointmentDto> GetReservedByCompanyAdmin([FromRoute] int companyAdminId)
+        {
+            return CreateResponse(_appointmentService.GetReservedByCompanyAdmin(companyAdminId));
         }
 
         [HttpGet("getAll")]
@@ -102,8 +105,9 @@ namespace API.Controllers.Company
         [HttpPut("reserveAppointment")]
         public ActionResult<AppointmentDto> ReserveAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
-            _emailService.SendAppointmentConfirmation(appointmentDto, userEmail);
-            return CreateResponse(_appointmentService.ReserveAppointment(appointmentDto));
+            var result = _appointmentService.ReserveAppointment(appointmentDto);
+            if(result.IsSuccess) _emailService.SendAppointmentConfirmation(result.Value, userEmail);
+            return CreateResponse(result);
         }
         
         [HttpPut("cancelAppointment")]
@@ -117,9 +121,9 @@ namespace API.Controllers.Company
         [HttpPut("markAppointmentAsProcessed")]
         public ActionResult<AppointmentDto> MarkAppointmentAsProcessed([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
-            _emailService.SendProcessedAppointmentConfirmation(appointmentDto, userEmail);
-            _equipmentService.UpdateProcessed(appointmentDto.Equipment);
-            return CreateResponse(_appointmentService.MarkAppointmentAsProcessed(appointmentDto));
+            var result = _appointmentService.MarkAppointmentAsProcessed(appointmentDto);
+            if (result.Value.Id != 0) _emailService.SendProcessedAppointmentConfirmation(appointmentDto, userEmail);
+            return CreateResponse(result);
         }
 
         [HttpGet("checkIfEquipmentIsReserved/{equipmentId:int}")]
@@ -134,7 +138,6 @@ namespace API.Controllers.Company
         public ActionResult IsSameAppointment([FromRoute] int appointmentId, [FromQuery] int userId)
         {
             bool isSameAppointment = _appointmentService.IsReservationEnabled(appointmentId, userId);
-
             return Ok(isSameAppointment);
         }
 
@@ -143,6 +146,13 @@ namespace API.Controllers.Company
         {
             List<string> base64ImageStrings = _appointmentService.RetrieveBarcodeImageData(userId.ToString());
             return Ok(base64ImageStrings);
+        }
+
+        [HttpPost("barcode/read")]
+        public ActionResult<AppointmentDto> ReadQrCode([FromForm] IFormFile qrCodeFile)
+        {
+            if(qrCodeFile.Length == 0) return BadRequest("No file provided");
+            return CreateResponse(_appointmentService.ReadAppointmentQrCode(qrCodeFile.OpenReadStream()));
         }
     }
 }

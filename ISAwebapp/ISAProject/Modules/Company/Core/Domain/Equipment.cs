@@ -1,6 +1,5 @@
 ﻿using ISAProject.Configuration.Core.Domain;
 using ISAProject.Modules.Company.API;
-
 namespace ISAProject.Modules.Company.Core.Domain
 {
     public class Equipment: Entity
@@ -24,6 +23,12 @@ namespace ISAProject.Modules.Company.Core.Domain
             Type = type;
             CompanyId = companyId;
             Price = price;
+        }
+
+        public void ReduceQuantity(int i)
+        {
+            Quantity -= i;
+            ReservedQuantity -= i;
         }
     }
 }

@@ -2,8 +2,6 @@
 using System.Net;
 using System.Text;
 using ISAProject.Modules.Stakeholders.API.Public;
-using ISAProject.Modules.Company.Core.Domain;
-using QRCoder;
 using IronBarCode;
 using ISAProject.Modules.Company.API.Dtos;
 
@@ -106,17 +104,24 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
 
         public void SendAppointmentConfirmation(AppointmentDto appointment, string recipientEmail)
         {
-            string appointmentDetails = $"Start: {appointment.Start}\n";
-            appointmentDetails += $"Equipment:\n";
+            StringBuilder appointmentDetailsBuilder = new StringBuilder($"AppointmentEAN: {appointment.Id}\n");
+            appointmentDetailsBuilder.Append($"Start: {appointment.Start}\n");
+            appointmentDetailsBuilder.Append("Equipment:\n");
             foreach (var equipment in appointment.Equipment)
             {
-                appointmentDetails += $"{equipment.Name}\n";
+                appointmentDetailsBuilder.Append($"{equipment.Name}\n");
             }
-            appointmentDetails += $"Admin: {appointment.AdminName} {appointment.AdminSurname}\n";
-            appointmentDetails += $"Customer: {appointment.CustomerName} {appointment.CustomerSurname}\n";
+            appointmentDetailsBuilder.Append($"Admin: {appointment.AdminName} {appointment.AdminSurname}\n");
+            appointmentDetailsBuilder.Append($"Customer: {appointment.CustomerName} {appointment.CustomerSurname}\n");
 
+            var barcodeFilePath = GenerateQrCode(appointment, recipientEmail, appointmentDetailsBuilder);
+            SendEmailWithAttachment(recipientEmail, "Reservation confirmation", "Reservation details are in attachment", barcodeFilePath);
+
+        }
+
+        private string GenerateQrCode(AppointmentDto appointment, string recipientEmail, StringBuilder appointmentDetailsBuilder)
+        {
             string barcodeFolderPath = "BarCodes";
-
             try
             {
                 if (!Directory.Exists(barcodeFolderPath))
@@ -127,16 +132,15 @@ namespace ISAProject.Modules.Stakeholders.Core.UseCases
                 string barcodeFileName = $"{appointment.CustomerId}_{appointment.Id}.png";
                 string barcodeFilePath = Path.Combine(barcodeFolderPath, barcodeFileName);
 
-                GeneratedBarcode qrcode = IronBarCode.BarcodeWriter.CreateBarcode(appointmentDetails, BarcodeEncoding.QRCode);
+                GeneratedBarcode qrcode = IronBarCode.BarcodeWriter.CreateBarcode(appointmentDetailsBuilder.ToString(), BarcodeEncoding.QRCode);
                 qrcode.SaveAsPng(barcodeFilePath);
+                return barcodeFilePath;
 
-                SendEmailWithAttachment(recipientEmail, "Reservation confirmation", "Reservation details are in attachment", barcodeFilePath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving barcode image: {ex.Message}");
+                throw new Exception($"Error saving barcode image: {ex.Message}");
             }
-
         }
 
         private void SendEmailWithAttachment(string recipientEmail, string emailSubject, string emailBody, string attachmentPath)

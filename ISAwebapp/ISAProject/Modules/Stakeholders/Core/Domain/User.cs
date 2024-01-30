@@ -49,6 +49,10 @@ namespace ISAProject.Modules.Stakeholders.Core.Domain
             return true;
         }
 
+        public void GetPenaltyPoints()
+        {
+            PenaltyPoints+= -2;
+        }
     }
     public enum UserRole
     {
