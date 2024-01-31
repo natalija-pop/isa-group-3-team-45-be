@@ -38,22 +38,25 @@ namespace API.Controllers.Simulators.QueueParticipants
             {
                 var body = e.Body.ToArray();
                 var messageJson = Encoding.UTF8.GetString(body);
-                var contract = Newtonsoft.Json.JsonConvert.DeserializeObject<HospitalContractDto>(messageJson);
+                var contract = Newtonsoft.Json.JsonConvert.DeserializeObject<HospitalContract>(messageJson);
                 var contractJson = JsonConvert.SerializeObject(contract);
 
-                await SendContractDataToEndpoint(contractJson);
+                await SendContractDataToEndpoint(contract);
 
             };
 
             channel.BasicConsume("receiving-delivery-queue", true, consumer);
         }
 
-        private async Task SendContractDataToEndpoint(string contractJson)
+        private async Task SendContractDataToEndpoint(HospitalContract contract)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:44310/api/contract");
-            request.Content = new StringContent(contractJson, Encoding.UTF8, "application/json");
+                var createRequest = new HttpRequestMessage(HttpMethod.Post, "https://localhost:44310/api/contract");
+                var createContent = new StringContent(JsonConvert.SerializeObject(contract), Encoding.UTF8, "application/json");
+                createRequest.Content = createContent;
 
-            var response = await _httpClient.SendAsync(request);
+                var createResponse = await _httpClient.SendAsync(createRequest);
+                createResponse.EnsureSuccessStatusCode();
         }
+
     }
 }

@@ -11,5 +11,6 @@ namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
     {
         HospitalContract Create(HospitalContract contract);
         HospitalContract Update(HospitalContract contract);
+        List<HospitalContract> GetAll();
     }
 }
