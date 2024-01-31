@@ -11,8 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.ConfigureSwagger(builder.Configuration);
-const string corsPolicy = "_corsPolicy";
-builder.Services.ConfigureCors(corsPolicy);
+const string corsPolicy = "_signalRCors";
+//builder.Services.ConfigureCors(corsPolicy);
+builder.Services.ConfigureSignalRCors(corsPolicy);
 builder.Services.ConfigureAuth();
 builder.Services.ConfigureRabbitMq();
 
@@ -38,7 +39,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-app.MapHub<PositionSimulatorHub>("position-simulator-hub");
+app.MapHub<PositionSimulatorHub>("/position-simulator-hub");
+
 QueueConsumer.Initialize(app.Services.GetRequiredService<IHubContext<PositionSimulatorHub, IPositionClient>>());
 
 var factory = new ConnectionFactory

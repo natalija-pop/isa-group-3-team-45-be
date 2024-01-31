@@ -17,7 +17,7 @@ namespace API.Controllers.Simulators
         }
 
         [HttpPost("activate-simulator")]
-        public Task<IActionResult> ActivateSimulator([FromBody] ActivationMessage message)
+        public ActionResult ActivateSimulator([FromBody] ActivationMessage message)
         {
             try
             {
@@ -31,11 +31,12 @@ namespace API.Controllers.Simulators
                 channel.QueueDeclare(queue: "activation-queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
                 channel.BasicPublish(exchange: "", routingKey: "activation-queue", basicProperties: null, body: messageBytes);
 
-                return Task.FromResult<IActionResult>(Ok("Activation started"));
+                return Ok("Activation started");
             }
             catch (Exception ex)
             {
-                return Task.FromResult<IActionResult>(StatusCode(500, "Internal Server Error"));
+                Console.WriteLine(ex.ToString());
+                return StatusCode(500, "Internal Server Error");
             }
         }
     }
