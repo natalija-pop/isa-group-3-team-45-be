@@ -9,6 +9,7 @@ namespace API.Startup
         {
             services.ConfigureStakeholdersModule();
             services.ConfigureCompanyModule();
+            services.ConfigureContractModule();
             return services;
         }
     }

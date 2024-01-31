@@ -113,6 +113,7 @@ namespace ISAProject.Modules.Company.Core.UseCases
                     appointment.CustomerId = appointmentDto.CustomerId;
                     appointment.CustomerName = appointmentDto.CustomerName;
                     appointment.CustomerSurname = appointmentDto.CustomerSurname;
+                    appointment.Status = appointmentDto.Status;
                     var existingEquipment = _repository.GetWithIds(equipmentIds);
                     appointment.Equipment = existingEquipment;
                     foreach (var equipment in appointment.Equipment)

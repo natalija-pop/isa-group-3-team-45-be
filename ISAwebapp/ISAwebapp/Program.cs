@@ -2,6 +2,8 @@ using API.Controllers.Simulators.QueueParticipants;
 using API.Hubs;
 using API.Hubs.Interfaces;
 using API.Startup;
+using ISAProject.Modules.Company.API.Public;
+using ISAProject.Modules.Company.Core.UseCases;
 using Microsoft.AspNetCore.SignalR;
 using RabbitMQ.Client;
 
@@ -18,6 +20,7 @@ builder.Services.ConfigureAuth();
 builder.Services.ConfigureRabbitMq();
 
 builder.Services.RegisterModules();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -43,16 +46,28 @@ app.MapHub<PositionSimulatorHub>("/position-simulator-hub");
 
 QueueConsumer.Initialize(app.Services.GetRequiredService<IHubContext<PositionSimulatorHub, IPositionClient>>());
 
-var factory = new ConnectionFactory
+
+var factoryHospital = new ConnectionFactory
 {
     HostName = "localhost",
     Port = 5672,
-    UserName = "natalija",
-    Password = "natalija123",
-    VirtualHost = "ISA simulator"
+    UserName = "guest",
+    Password = "guest"
 };
-using var connection = factory.CreateConnection();
+
+
+using var connection = factoryHospital.CreateConnection();
 using var channel = connection.CreateModel();
 QueueConsumer.ReceiveNewPosition(channel);    
 QueueConsumer.StopSimulation(channel);
+
+using var connectionHospital = factoryHospital.CreateConnection();
+using var channelHospital = connectionHospital.CreateModel();
+
+var httpClientFactory = app.Services.GetRequiredService<IHttpClientFactory>();
+
+var hospitalQueueConsumer = new HospitalQueueConsumer(httpClientFactory);
+
+hospitalQueueConsumer.ReceiveContract(channelHospital);
+HospitalQueueProducer.SendDeliveryMessage(channelHospital);
 app.Run();
