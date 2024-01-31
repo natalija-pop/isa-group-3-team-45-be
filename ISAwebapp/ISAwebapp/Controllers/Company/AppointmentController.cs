@@ -1,6 +1,7 @@
 ﻿using ISAProject.Modules.Company.API.Dtos;
 using ISAProject.Modules.Company.API.Public;
 using ISAProject.Modules.Stakeholders.API.Public;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers.Company
 {
@@ -102,6 +103,7 @@ namespace API.Controllers.Company
             return CreateResponse(_appointmentService.GetCustomerScheduledAppointments(customerId));
         }
 
+        [Authorize(Policy = "EmployeePolicy")]
         [HttpPut("reserveAppointment")]
         public ActionResult<AppointmentDto> ReserveAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] string userEmail)
         {
@@ -109,7 +111,8 @@ namespace API.Controllers.Company
             if(result.IsSuccess) _emailService.SendAppointmentConfirmation(result.Value, userEmail);
             return CreateResponse(result);
         }
-        
+
+        [Authorize(Policy = "EmployeePolicy")]
         [HttpPut("cancelAppointment")]
         public ActionResult<AppointmentDto> CancelAppointment([FromBody] AppointmentDto appointmentDto, [FromQuery] long userId)
         {
@@ -134,6 +137,7 @@ namespace API.Controllers.Company
             return Ok(isEquipmentReserved);
         }
 
+        [Authorize(Policy = "EmployeePolicy")]
         [HttpGet("checkIfSameAppintment/{appointmentId:int}")]
         public ActionResult IsSameAppointment([FromRoute] int appointmentId, [FromQuery] int userId)
         {
