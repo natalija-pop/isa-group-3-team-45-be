@@ -8,7 +8,6 @@ namespace ISAProject.Modules.Company.API.Dtos
 {
     public class HospitalContractDto
     {
-        public long Id { get; set; }
         public string Equipment { get; set; }
         public int Quantity { get; set; }
         public DateTime DeliveryTime { get; set; }

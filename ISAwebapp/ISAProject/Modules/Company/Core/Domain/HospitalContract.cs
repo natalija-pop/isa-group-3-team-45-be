@@ -9,7 +9,6 @@ namespace ISAProject.Modules.Company.Core.Domain
 {
     public class HospitalContract : Entity
     {
-        public long Id { get; set; }
         public string Equipment { get; set; }
         public int Quantity { get; set; }
         public DateTime DeliveryTime { get; set; }
@@ -20,9 +19,8 @@ namespace ISAProject.Modules.Company.Core.Domain
         {
         }
 
-        public HospitalContract(long id, string equipment, int quantity, DateTime deliveryTime, string hospitalName, string hospitalAddress)
+        public HospitalContract(string equipment, int quantity, DateTime deliveryTime, string hospitalName, string hospitalAddress)
         {
-            Id = id;
             Equipment = equipment;
             Quantity = quantity;
             DeliveryTime = deliveryTime;

@@ -31,10 +31,15 @@ namespace ISAProject.Modules.Company.Core.UseCases
             return MapToDto(entity);
         }
 
-        public Result<HospitalContractDto> Update(HospitalContractDto contract)
+        public Result<HospitalContract> Update(HospitalContract contract)
         {
-            var entity = _repository.Update(MapToDomain(contract));
-            return MapToDto(entity);
+            var entity = _repository.Update(contract);
+            return entity;
+        }
+        public Result<List<HospitalContract>> GetAll()
+        {
+            var contracts = _repository.GetAll();
+            return contracts;
         }
     }
 }

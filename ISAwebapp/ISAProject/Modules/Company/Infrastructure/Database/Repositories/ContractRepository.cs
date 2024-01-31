@@ -40,5 +40,10 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
             }
             return contract;
         }
+
+        public List<HospitalContract> GetAll()
+        {
+            return _dbContext.Contracts.ToList();
+        }
     }
 }
