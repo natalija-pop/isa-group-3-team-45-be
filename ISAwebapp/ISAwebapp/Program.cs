@@ -1,9 +1,14 @@
 using API.Controllers.Simulators.QueueParticipants;
+using API.Hubs;
+using API.Hubs.Interfaces;
 using API.Startup;
+using Microsoft.AspNetCore.SignalR;
 using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.ConfigureSwagger(builder.Configuration);
 const string corsPolicy = "_corsPolicy";
@@ -31,9 +36,10 @@ app.UseRouting();
 app.UseCors(corsPolicy);
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.UseAuthorization();
-
 app.MapControllers();
+
+app.MapHub<PositionSimulatorHub>("position-simulator-hub");
+QueueConsumer.Initialize(app.Services.GetRequiredService<IHubContext<PositionSimulatorHub, IPositionClient>>());
 
 var factory = new ConnectionFactory
 {
