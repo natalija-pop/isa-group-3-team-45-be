@@ -13,19 +13,17 @@ namespace ISAProject.Modules.Company.Core.Domain
         public WorkingHours WorkingHours { get; private set; }
         public virtual ICollection<Equipment> Equipment { get; private set; }
         public virtual ICollection<Appointment> WorkCalendar { get; private set; }
-        
-        [NotMapped]
-        public virtual ICollection<User> Admins { get; private set; }
+        public virtual ICollection<CompanyAdmin> Admins { get; private set; }
 
         public Company() {}
-        public Company(string name, string description, Address address,WorkingHours workingHours, ICollection<User> users)
+        public Company(string name, string description, Address address,WorkingHours workingHours, ICollection<CompanyAdmin> admins)
         {
             Validate(name, description);
             Name = name;
             Description = description;
             Address = address;
             WorkingHours = workingHours;
-            Admins = users;
+            Admins = admins;
         }
 
         private static void Validate(string name, string description)

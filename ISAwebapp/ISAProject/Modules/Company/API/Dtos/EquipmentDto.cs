@@ -9,5 +9,7 @@
         public int ReservedQuantity { get; set; }   
         public EquipmentType Type { get; set; }
         public int CompanyId { get; set; }
+        public double Price { get; set; }
+
     }
 }

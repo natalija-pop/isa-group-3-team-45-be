@@ -9,12 +9,10 @@ namespace ISAProject.Modules.Stakeholders.API.Dtos
         public string Password { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string City { get; set; }
-        public string Country { get; set; }
-        public string Phone { get; set; }
-        public string Profession { get; set; }
-        public string CompanyInformation { get; set; }
         public UserRole Role { get; set; }
         public bool IsActivated { get; set; }
+        public int PenaltyPoints {  get; set; }
+        public DateTime DeletionPenaltyDate { get; set; }
+
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ISAProject.Modules.Database;
 
 namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
 {
@@ -14,7 +10,13 @@ namespace ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces
         Appointment Update(Appointment appointment);
         Company GetAppointmentsCompany(long companyId);
         List<Appointment> GetCompanyAppointments(long companyId);
-        List<Equipment> GetWithIds(List<int> desiredEquipmentIds);
+        List<Appointment> GetCustomerAppointments(long customerId);
+        List<Appointment> GetReservedByCompanyAdmin(int companyAdminId);
+        List<Appointment> GetCustomerProcessedAppointments(long customerId);
+        List<Appointment> GetCustomerScheduledAppointments(long customerId);
 
+        Appointment GetById(long id, DatabaseContext dbContext);
+        bool IsTimeSlotAvailable(DateTime start, int duration, long companyId, DatabaseContext dbContext);
+        List<Equipment> GetWithIds(List<int> desiredEquipmentIds);
     }
 }

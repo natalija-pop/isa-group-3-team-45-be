@@ -8,6 +8,7 @@ namespace ISAProject.Modules.Stakeholders.Core.Mappers
     {
         public StakeholderProfile()
         {
+            CreateMap<EmployeeRegistrationDto, Employee>().ReverseMap();
             CreateMap<UserDto, User>().ReverseMap();
             CreateMap<CompanyAdminDto, CompanyAdmin>().ReverseMap();
         }

@@ -18,16 +18,22 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult<AuthenticationTokensDto> Register([FromBody] UserRegistrationDto account)
+        public ActionResult<AuthenticationTokensDto> Register([FromBody] EmployeeRegistrationDto account)
         {
             var result = _authenticationService.RegisterUser(account);
             _emailService.SendActivationEmail(account.Email, result.Value.AccessToken);
             return CreateResponse(result);
         }
 
+        [HttpPost("register-company-admin")]
+        public ActionResult<AuthenticationTokensDto> RegisterCompanyAdmin([FromBody] CompanyAdminDto account)
+        {
+            return CreateResponse(_authenticationService.RegisterCompanyAdmin(account));
+        }
+
         [Authorize(Policy = "SystemAdministratorPolicy")]
-        [HttpPost("registerSysAdmin")]
-        public ActionResult<AuthenticationTokensDto> RegisterSysAdmin([FromBody] SysAdminRegistrationDto account)
+        [HttpPost("register-sys-admin")]
+        public ActionResult<AuthenticationTokensDto> RegisterSysAdmin([FromBody] AccountRegistrationDto account)
         {
             var result = _authenticationService.RegisterSysAdmin(account);
             _emailService.SendRegistrationInfoEmail(account.Email, result.Value.Password);

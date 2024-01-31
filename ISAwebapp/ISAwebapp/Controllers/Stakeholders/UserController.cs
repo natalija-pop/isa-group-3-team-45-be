@@ -22,29 +22,28 @@ namespace API.Controllers.Stakeholders
             return CreateResponse(result);
         }
 
-        [HttpPost("createCompanyAdmin/{companyId:int}")]
-        public ActionResult<UserDto> CreateNewCompanyAdmin([FromBody] UserDto userDto, [FromRoute] int companyId)
-        {
-            return CreateResponse(_userService.AddNewCompanyAdmin(userDto, companyId));
-        }
-
         [HttpGet("getAll")]
         public ActionResult<UserDto> GetPaged([FromQuery] int page, [FromQuery] int pageSize)
         {
             return CreateResponse(_userService.GetPaged(page, pageSize));
         }
 
-        [HttpGet("getCompanyAdmins/{companyId:int}")]
-        public ActionResult<UserDto> GetCompanyAdmins([FromRoute] int companyId)
+        [HttpPost("getUsersByIds")]
+        public ActionResult<UserDto> GetUsersByIds([FromBody] List<long> userIds)
         {
-            return CreateResponse(_userService.GetCompanyAdmins(companyId));
+            return CreateResponse(_userService.GetUsersByIds(userIds));
         }
-
 
         [HttpGet("get/{userId:int}")]
         public ActionResult<UserDto> Get([FromRoute] int userId)
         {
             return CreateResponse(_userService.Get(userId));
+        }
+
+        [HttpGet("getCompanyAdmin/{companyAdminId:int}")]
+        public ActionResult<UserDto> GetCompanyAdmin([FromRoute] int companyAdminId)
+        {
+            return CreateResponse(_userService.GetCompanyAdmin(companyAdminId));
         }
 
         [HttpPut("{userId:int}")]
@@ -63,6 +62,26 @@ namespace API.Controllers.Stakeholders
         public ActionResult<bool> ChangePassword([FromBody] PasswordChangeDto passwordChangeDto)
         {
             return CreateResponse(_userService.ChangePassword(passwordChangeDto));
+        }
+        [HttpGet("deletion-penalty/{userId:int}")]
+        public IActionResult HasDeletionPenaltyInCurrentMonth([FromRoute] int userId)
+        {
+            var hasPenalty = _userService.HasDeletionPenaltyInCurrentMonth(userId, DateTime.Today);
+            return Ok(hasPenalty);
+        }
+        [HttpPost("clear-penalty-points/{userId}")]
+        public IActionResult ClearPenaltyPoints([FromRoute] int userId)
+        {
+            var result = _userService.ClearPenaltyPointsForUser(userId);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value); 
+            }
+            else
+            {
+                return BadRequest(result.Errors);
+            }
         }
     }
 }

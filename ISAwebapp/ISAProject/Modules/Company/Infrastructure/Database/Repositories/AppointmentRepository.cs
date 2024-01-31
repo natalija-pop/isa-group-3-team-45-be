@@ -1,22 +1,16 @@
 ﻿using ISAProject.Modules.Company.Core.Domain;
 using ISAProject.Modules.Company.Core.Domain.RepositoryInterfaces;
+using ISAProject.Modules.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
 {
     public class AppointmentRepository : IAppointmentRepository
     {
-        private readonly CompanyContext _context;
+        private readonly DatabaseContext _context;
 
-        public AppointmentRepository(CompanyContext companyContext)
+        public AppointmentRepository(DatabaseContext context)
         {
-            _context = companyContext;
+            _context = context;
         }
 
         public Appointment Create(Appointment appointment)
@@ -24,6 +18,22 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
             _context.Appointments.Add(appointment);
             _context.SaveChanges();
             return appointment;
+        }
+
+        public Appointment GetById(long id, DatabaseContext dbContext)
+        {
+            return dbContext.Appointments.Find(id);
+        }
+
+        public bool IsTimeSlotAvailable(DateTime start, int duration, long companyId, DatabaseContext dbContext)
+        {
+            var availableTimeSlots =  dbContext.Appointments.Where(a => a.CompanyId != companyId && !(start.AddMinutes(duration) < a.Start) && !(start > a.Start.AddMinutes(duration))).ToList();
+            return !availableTimeSlots.Any();
+        }
+
+        public List<Appointment> GetReservedByCompanyAdmin(int companyAdminId)
+        {
+            return _context.Appointments.Where(a => a.AdminId == (long)companyAdminId && (a.CustomerId != 0 || a.CustomerId != null)).ToList();
         }
 
         public Appointment Get(long id)
@@ -66,7 +76,22 @@ namespace ISAProject.Modules.Company.Infrastructure.Database.Repositories
 
         public List<Appointment> GetCompanyAppointments(long companyId)
         {
-            return GetAll().FindAll(x => x.CompanyId == companyId && x.Scheduled == false);
+            return GetAll().FindAll(x => x.CompanyId == companyId && x.Status == Appointment.AppointmentStatus.Predefined);
+        }
+
+        public List<Appointment> GetCustomerAppointments(long customerId)
+        {
+            return GetAll().FindAll(x => x.CustomerId == customerId );
+        }
+
+        public List<Appointment> GetCustomerScheduledAppointments(long customerId)
+        {
+            return GetAll().FindAll(x => x.CustomerId == customerId && x.Status == Appointment.AppointmentStatus.Scheduled);
+        }
+
+        public List<Appointment> GetCustomerProcessedAppointments(long customerId)
+        {
+            return GetAll().FindAll(x => x.CustomerId == customerId && x.Status == Appointment.AppointmentStatus.Processed);
         }
     }
 }

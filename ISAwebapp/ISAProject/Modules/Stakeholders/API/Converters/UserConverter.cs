@@ -19,13 +19,9 @@ namespace ISAProject.Modules.Stakeholders.API.Converters
                 Password = user.Password,
                 Name = user.Name,
                 Surname = user.Surname,
-                City = user.City,
-                Country = user.Country,
-                Phone = user.Phone,
-                Profession = user.Profession,
-                CompanyInformation = user.CompanyInformation,
                 Role = user.Role,
-                IsActivated = user.IsActivated
+                IsActivated = user.IsActivated,
+                PenaltyPoints = user.PenaltyPoints,
             };
         }
 
@@ -41,14 +37,18 @@ namespace ISAProject.Modules.Stakeholders.API.Converters
                 userDto.Password,
                 userDto.Name,
                 userDto.Surname,
-                userDto.City,
-                userDto.Country,
-                userDto.Phone,
-                userDto.Profession,
-                userDto.CompanyInformation,
                 userDto.Role,
                 userDto.IsActivated
             );
+        }
+
+        public static List<UserDto> ConvertToDto(List<User> users)
+        {
+            return users.Select(ConvertToDto).ToList();
+        }
+        public static List<User> ConvertToDomain(List<UserDto> users)
+        {
+            return users.Select(ConvertToDomain).ToList();
         }
     }
 }

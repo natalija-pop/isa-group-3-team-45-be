@@ -6,6 +6,7 @@ namespace ISAProject.Modules.Stakeholders.API.Public
     {
         void SendActivationEmail(string recipientEmail, string activationLink);
         void SendRegistrationInfoEmail(string recipientEmail, string recipientGeneratedPassword);
-        void SendAppointmentConfirmation(AppointmentDto appointment, string userEmail);
+        void SendAppointmentConfirmation(AppointmentDto appointment, string recipientEmail);
+        void SendProcessedAppointmentConfirmation(AppointmentDto appointment, string userEmail);
     }
 }
