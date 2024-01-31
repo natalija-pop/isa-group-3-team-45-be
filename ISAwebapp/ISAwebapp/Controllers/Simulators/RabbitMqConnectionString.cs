@@ -5,9 +5,8 @@ namespace API.Controllers.Simulators
     {
         private readonly string _rabbitMqHost = "localhost"; 
         private readonly int _rabbitMqPort = 5672; 
-        private readonly string _rabbitMqUserName = "natalija"; 
-        private readonly string _rabbitMqPassword = "natalija123"; 
-        private readonly string _rabbitMqVirtualHost = "ISA simulator";
+        private readonly string _rabbitMqUserName = "guest"; 
+        private readonly string _rabbitMqPassword = "guest"; 
 
         public ConnectionFactory CreateFactory()
         {
@@ -16,8 +15,7 @@ namespace API.Controllers.Simulators
                 HostName = _rabbitMqHost,
                 Port = _rabbitMqPort,
                 UserName = _rabbitMqUserName,
-                Password = _rabbitMqPassword,
-                VirtualHost = _rabbitMqVirtualHost
+                Password = _rabbitMqPassword
             };
             return factory;
         }
