@@ -2,8 +2,6 @@ using API.Controllers.Simulators.QueueParticipants;
 using API.Hubs;
 using API.Hubs.Interfaces;
 using API.Startup;
-using ISAProject.Modules.Company.API.Public;
-using ISAProject.Modules.Company.Core.UseCases;
 using Microsoft.AspNetCore.SignalR;
 using RabbitMQ.Client;
 
@@ -14,7 +12,6 @@ builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.ConfigureSwagger(builder.Configuration);
 const string corsPolicy = "_signalRCors";
-//builder.Services.ConfigureCors(corsPolicy);
 builder.Services.ConfigureSignalRCors(corsPolicy);
 builder.Services.ConfigureAuth();
 builder.Services.ConfigureRabbitMq();
